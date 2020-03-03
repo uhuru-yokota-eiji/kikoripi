@@ -4,10 +4,10 @@ services:
     build:
       context: .
       args:
-        PROJECT_DIR: /path/to/projcet
+        PROJECT_DIR: /app
     image: django
     command: "python3.7 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/path/to/projcet
+      - .:/app
     ports:
       - "8000:8000"
