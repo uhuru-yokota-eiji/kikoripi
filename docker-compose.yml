@@ -6,7 +6,7 @@ services:
       args:
         PROJECT_DIR: /app
     image: django
-    command: "python3.7 manage.py runserver 0.0.0.0:8000"
+    command: "python3.8 manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
