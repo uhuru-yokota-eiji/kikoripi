@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.http.response import JsonResponse
 
-# Create your views here.
+
+def index(request):
+    print("index")
+    response = request.GET
+    return JsonResponse(response)
