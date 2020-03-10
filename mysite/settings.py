@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from os.path import join, dirname
+from dotenv import load_dotenv
+
+# manage environment variables on .env file
+dotenv_path = join(dirname(__file__), '../.env')
+load_dotenv(dotenv_path)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,8 +31,11 @@ SECRET_KEY = 'd@fnn=1*v*&wfe8f5865t23tydlpeyz)^w=pae&c*luvgg&-9x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# TODO: fix move .env file
-ALLOWED_HOSTS = ['0.0.0.0', 'wss-demo.herokuapp.com']
+ALLOWED_HOSTS = [
+    os.getenv("LOCAL_HOST"),  # for local develop
+    os.getenv("HEROKU_HOST"),  # for heroku demo
+    os.getenv("RASPI_HOST"),  # for raspi
+]
 
 
 # Application definition
