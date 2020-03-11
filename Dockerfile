@@ -15,8 +15,9 @@ ENV LANG en_US.utf8
 FROM python3.8 as django
 ARG PROJECT_DIR
 WORKDIR $PROJECT_DIR
-ADD requirements.txt $PROJECT_DIR
-RUN pip3.8 install -r requirements.txt
+# ADD requirements/develop.txt $PROJECT_DIR
+COPY requirements/develop.txt $PROJECT_DIR
+RUN pip3.8 install -r develop.txt
 COPY . $PROJECT_DIR
 
 # EXPOSE 8000
