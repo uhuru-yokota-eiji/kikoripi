@@ -2,20 +2,36 @@ from django.http.response import JsonResponse
 from grovepi import *
 
 
-def index(request):
-    # print("index")
-
-    led = 2
-    pinMode(led, "OUTPUT")
+def write(request):
+    init_gpio_output()
 
     response = request.GET
 
-    # print(type(response))
-    # print(response)
+    target = response.get("target")
+    value = response.get("value")
+    gpio_no = parse_gpio_no(target)
 
-    if response.get("target") == "GPIO2" and response.get("value") == "1":
-        digitalWrite(led, 1)
+    if is_gp_target(target) and value == "1":
+        digitalWrite(gpio_no, 1)
     else:
-        digitalWrite(led, 0)
+        digitalWrite(gpio_no, 0)
 
     return JsonResponse(response)
+
+
+def read(request):
+    response = request.GET
+    return JsonResponse(response)
+
+
+def parse_gpio_no(target_str):
+    return int(target_str.replace("GP", ""))
+
+
+def is_gp_target(target_str):
+    return target_str.startswith("GP")
+
+
+def init_gpio_output():
+    for no in range(8):
+        pinMode(no + 1, "OUTPUT")
