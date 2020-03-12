@@ -5,7 +5,7 @@ from grovepi import *
 def write(request):
     init_gpio_output()
 
-    response = request.GET
+    response = request.GET.copy()
 
     target = response.get("target")
     value = response.get("value")
@@ -20,12 +20,32 @@ def write(request):
 
 
 def read(request):
-    response = request.GET
+    response = request.GET.copy()
+
+    target = response.get("target")
+    adc_no = parse_adc_no(target)
+
+    pinMode(adc_no, "INPUT")
+    try:
+        sensor_value = analogRead(adc_no)
+    except IOError:
+        print("Error")
+    else:
+        response["value"] = sensor_value
+
     return JsonResponse(response)
 
 
 def parse_gpio_no(target_str):
     return int(target_str.replace("GP", ""))
+
+
+def parse_adc_no(target_str):
+    '''
+    A(n) Port is Pin (n+14) Port
+    ex) A0 Port is Pin 14 Port
+    '''
+    return int(target_str.replace("ADC", "")) + 14
 
 
 def is_gp_target(target_str):

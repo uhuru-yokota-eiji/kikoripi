@@ -32,9 +32,10 @@ SECRET_KEY = 'd@fnn=1*v*&wfe8f5865t23tydlpeyz)^w=pae&c*luvgg&-9x'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    os.getenv("LOCAL_HOST"),  # for local develop
-    os.getenv("HEROKU_HOST"),  # for heroku demo
-    os.getenv("RASPI_HOST"),  # for raspi
+    "*"
+    # os.getenv("LOCAL_HOST"),  # for local develop
+    # os.getenv("HEROKU_HOST"),  # for heroku demo
+    # os.getenv("RASPI_HOST"),  # for raspi
 ]
 
 
