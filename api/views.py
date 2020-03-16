@@ -1,8 +1,10 @@
 from django.http.response import JsonResponse
 from grovepi import *
+from api.libs import bme280
 
 
 def write(request):
+    # NOTICE: 初期化をすべて毎回実施するのが良いかは要調査
     init_gpio_output()
 
     response = request.GET.copy()
@@ -34,6 +36,16 @@ def read(request):
         response["value"] = sensor_value
 
     return JsonResponse(response)
+
+def sensor(request):
+    response = request.GET.copy()
+
+    ids = response.get("ids")
+    print(ids)
+
+    data = bme280.main()
+    print(data)
+    return JsonResponse(data)
 
 
 def parse_gpio_no(target_str):

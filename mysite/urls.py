@@ -20,5 +20,6 @@ urlpatterns = [
     # TODO: url_〇〇は毎回ファイル追加になるので、もっとスマートな/write /readの用意をしたい
     path('write', include('api.urls_write')),
     path('read', include('api.urls_read')),
+    path('sensor', include('api.urls_sensor')),
     path('admin/', admin.site.urls),
 ]
