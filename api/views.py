@@ -37,15 +37,22 @@ def read(request):
 
     return JsonResponse(response)
 
-def sensor(request):
-    response = request.GET.copy()
 
-    ids = response.get("ids")
-    print(ids)
+def sensor(request):
+    params = request.GET.copy()
+    # ids = params.getlist("ids")
 
     data = bme280.main()
-    print(data)
-    return JsonResponse(data)
+    # print(data)
+    response = {
+        # ids[0]: data
+        "BME0": data # とりいそぎ固定
+    }
+    return JsonResponse(response)
+
+
+def scan(request):
+    return JsonResponse({"result": True})
 
 
 def parse_gpio_no(target_str):

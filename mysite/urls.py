@@ -21,5 +21,6 @@ urlpatterns = [
     path('write', include('api.urls_write')),
     path('read', include('api.urls_read')),
     path('sensor', include('api.urls_sensor')),
+    path('scan', include('api.urls_scan')),
     path('admin/', admin.site.urls),
 ]
