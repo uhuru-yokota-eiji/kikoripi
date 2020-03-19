@@ -7,8 +7,8 @@ class IntervalProcessing:
         self._interval = interval
         self._method = method
         self._args = args
+        self._stop = True
         self._thread = threading.Thread(target=self._schedule)
-        self._stop = False
 
 
     def _schedule(self):
@@ -21,6 +21,7 @@ class IntervalProcessing:
             time.sleep(next_time_sec)
 
     def start(self):
+        self._stop = False
         self._thread.start()
 
     def stop(self):

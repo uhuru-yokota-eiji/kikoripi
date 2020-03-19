@@ -34,7 +34,7 @@ def main():
     # print(data)
 
     return {
-        "timestamp": data.timestamp,
+        "timestamp": data.timestamp.timestamp(),
         "temperature": data.temperature,
         "pressure": data.pressure,
         "humidity": data.humidity,
