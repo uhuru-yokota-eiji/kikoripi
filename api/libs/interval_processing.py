@@ -26,20 +26,3 @@ class IntervalProcessing:
 
     def stop(self):
         self._stop = True
-
-
-def worker(args):
-    # print(args)
-    print(f"start worker {time.time()}")
-    time.sleep(3)
-    print(f"end worker {time.time()}")
-
-
-if __name__ == '__main__':
-    # schedule(3, worker, (0,))
-    t = IntervalProcessing(1, worker, (0,))
-    t.start()
-    print("start thread")
-    time.sleep(10)
-    print("call stop")
-    t.stop()
