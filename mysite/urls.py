@@ -15,12 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from api import views
 
 urlpatterns = [
-    # TODO: url_〇〇は毎回ファイル追加になるので、もっとスマートな/write /readの用意をしたい
-    path('write', include('api.urls_write')),
-    path('read', include('api.urls_read')),
-    path('sensor', include('api.urls_sensor')),
-    path('scan', include('api.urls_scan')),
     path('admin/', admin.site.urls),
+    path('', include('api.urls')),
 ]
