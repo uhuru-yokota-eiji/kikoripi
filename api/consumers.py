@@ -11,12 +11,10 @@ class ApiConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         self.op = ""
         self.sensor_names = []
-        self.interval = 1000
         self.room_group_name = settings.CHANNEL_GROUP_NAME
         self.interval_proccess = None
         self.tick = None
         super().__init__(*args, **kwargs)
-
 
     def connect(self):
         print("connect")
@@ -49,7 +47,6 @@ class ApiConsumer(WebsocketConsumer):
         op = text_data_json['op']
         if(op == "listen"):
             self.sensor_names = text_data_json['v']
-            self.interval = int(text_data_json['interval'])
 
             # Send message to room group
             self.send_client_sync(text_data_json)
@@ -62,7 +59,7 @@ class ApiConsumer(WebsocketConsumer):
             self.stop_tick()
         elif(op == "debug"):  # debug mode for dev
             self.send_client_sync(
-                {"v": self.sensor_names, "interval": self.interval})
+                {"v": self.sensor_names})
         else:
             pass
 
@@ -92,7 +89,7 @@ class ApiConsumer(WebsocketConsumer):
     def run_tick(self):
         if tick_nos := self.sensor_ticks():
             self.tick = self.tick or Tick(self.channel_layer, tick_nos)
-            self.tick.start(self.interval)
+            self.tick.start()
 
     def stop_tick(self):
         if type(self.tick) == Tick:

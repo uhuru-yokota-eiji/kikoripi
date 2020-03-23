@@ -1,6 +1,7 @@
 from django.http.response import JsonResponse
 from grovepi import *
 from api.libs import bme280
+from api.models import TickInterval
 
 
 def write(request):
@@ -11,6 +12,7 @@ def write(request):
 
     target = response.get("target")
     value = response.get("value")
+    interval = response.get("interval")
     gpio_no = parse_gpio_no(target)
 
     if is_gp_target(target) and value == "1":
@@ -18,6 +20,11 @@ def write(request):
     else:
         digitalWrite(gpio_no, 0)
 
+    if(t := TickInterval.objects.all().first()):
+        t.interval = int(interval)
+        t.save()
+    else:
+        TickInterval.objects.create(interval=interval)
     return JsonResponse(response)
 
 
