@@ -10,7 +10,6 @@ class IntervalProcessing:
         self._stop = True
         self._thread = threading.Thread(target=self._schedule)
 
-
     def _schedule(self):
         base_time_sec = time.time()
         next_time_sec = 0

@@ -145,3 +145,8 @@ CHANNEL_LAYERS = {
         # },
     },
 }
+
+# application constant
+CHANNEL_GROUP_NAME = "wss_ws"
+SENSOR_NAME_TICK = "TICK"
+SENSOR_NAME_BME280 = "BME280"

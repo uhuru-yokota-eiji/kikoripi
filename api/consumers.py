@@ -1,8 +1,9 @@
+from django.conf import settings
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
-from api.libs.interval_processing import IntervalProcessing
 from api.libs import bme280
+from api.libs.tick import Tick
 
 
 # TODO: Chatという文字は消す
@@ -12,8 +13,9 @@ class ChatConsumer(WebsocketConsumer):
         self.op = ""
         self.sensor_names = []
         self.interval = 1000
-        self.room_group_name = 'wss_ws'
+        self.room_group_name = settings.CHANNEL_GROUP_NAME
         self.interval_proccess = None
+        self.tick = None
         super().__init__(*args, **kwargs)
 
 
@@ -30,7 +32,7 @@ class ChatConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # TODO: close_code が何か調べる
         print("disconnect", close_code)
-        self.stop_interval_processing()
+        self.stop_tick()
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
@@ -53,13 +55,12 @@ class ChatConsumer(WebsocketConsumer):
             # Send message to room group
             self.send_client_sync(text_data_json)
 
-            self.run_interval_processing()
+            if tick_nos := self.sensor_ticks():
+                self.run_tick()
         elif(op == "scan"):
             self.send_client_sync({"result": "ok"})
         elif(op == "stop"):
-            # TODO: close_codeが何か調べる
-            self.disconnect(close_code=100)
-            self.stop_interval_processing()
+            self.stop_tick()
         elif(op == "debug"):  # debug mode for dev
             self.send_client_sync(
                 {"v": self.sensor_names, "interval": self.interval})
@@ -81,22 +82,27 @@ class ChatConsumer(WebsocketConsumer):
     # def send_ws(self):
     def sensor_value(self):
         # TODO: 今はBME280固定
-        data = bme280.main()
+        # data = bme280.main()
+        data = {"val": "dummy"}
         self.send_client_sync(
             {
                 "BME0": data
             }
         )
 
-    def run_interval_processing(self):
-        # send sensor value to ws server
-        self.stop_interval_processing()
-        self.interval_proccess = IntervalProcessing(
-            self.interval / 1000, self.sensor_value)
-        self.interval_proccess.start()
+    def run_tick(self):
+        if tick_nos := self.sensor_ticks():
+            self.tick = self.tick or Tick(self.channel_layer, tick_nos)
+            self.tick.start(self.interval)
 
+    def stop_tick(self):
+        if type(self.tick) == Tick:
+            self.tick.stop()
 
-
-    def stop_interval_processing(self):
-        if type(self.interval_proccess) == IntervalProcessing:
-            self.interval_proccess.stop()
+    def sensor_ticks(self):
+        tick_nos = []
+        for sensor_name in self.sensor_names:
+            if sensor_name.startswith(settings.SENSOR_NAME_TICK):
+                ticks = sensor_name.split(settings.SENSOR_NAME_TICK)
+                tick_nos.append(ticks[1])
+        return tick_nos
