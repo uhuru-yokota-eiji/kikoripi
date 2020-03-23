@@ -6,8 +6,7 @@ from api.libs import bme280
 from api.libs.tick import Tick
 
 
-# TODO: Chatという文字は消す
-class ChatConsumer(WebsocketConsumer):
+class ApiConsumer(WebsocketConsumer):
 
     def __init__(self, *args, **kwargs):
         self.op = ""
