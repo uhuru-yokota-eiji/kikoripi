@@ -1,18 +1,21 @@
-from django.conf import settings
-from asgiref.sync import async_to_sync
 import json
+import time
+
+from asgiref.sync import async_to_sync
+from django.conf import settings
+
 from api.libs.interval_processing import IntervalProcessing
 from api.models import TickInterval
-import time
-import threading
 
 
 class Tick:
 
     DEFAULT_INTERVAL = 1000
+    # 実行中のインスタンスをクラスメソッドからアクセスできるように保存
+    # 同時に１インスタンスのみ実行する想定
+    running_instance = None
 
     def __init__(self, channel_layer, nos):
-        # self.channels_layers = channels_layers
         self.channel_layer = channel_layer
         self.nos = nos  # NOTICE: 現在未使用。同じTICKを複数利用した場合を想定
         self._value = 0
@@ -24,10 +27,14 @@ class Tick:
     def start(self):
         self.stop()
         self.interval_proccess = IntervalProcessing(
-            self._interval / 1000, self._send_sensor_value)
+            self._interval / 1000, self._send_sensor_value
+        )
         self.interval_proccess.start()
+
+        # NOTICE: globals()[self.__class__.__name__]は自身のクラス名
+        globals()[self.__class__.__name__].running_instance = self
+
         self.is_stop = False
-        self._update_interval()
 
     def stop(self):
         if type(self.interval_proccess) == IntervalProcessing:
@@ -38,30 +45,47 @@ class Tick:
         async_to_sync(self.channel_layer.group_send)(
             self.group_name,
             {
-                'type': 'send_client',
-                'result':
-                {
+                "type": "send_client",
+                "result": {
                     # NOTICE: no=0で固定。今後複数扱うようであればself.nosを利用する。
                     settings.SENSOR_NAME_TICK + "0": self._sensor_value,
-                    "timestamp":time.time()
-                }
-            }
+                    "timestamp": time.time(),
+                },
+            },
         )
 
     def send_client(self, event):
-        self.send(json.dumps(event['result']))
+        self.send(json.dumps(event["result"]))
 
-    def _update_interval(self):
-        _thread = threading.Thread(target=self._update_interval_run)
-        _thread.start()
+    @classmethod
+    def update_interval(cls, _interval_ms):
+        """intervalの更新
+        Args:
+            _interval_ms (int): msec
+        """
 
-    def _update_interval_run(self):
-        while not self.is_stop:
-            time.sleep(1)
-            if(self._interval_saved and (self.interval != self._interval_saved)):
-                self.set_interval = self._interval_saved
-                self.start()
-                break
+        interval_ms = int(_interval_ms)
+
+        self = cls.running_instance
+
+        self._update_stored_interval(interval_ms)
+        if self._is_run():
+            self.interval_proccess.interval(interval_ms / 1000)
+
+    def _update_stored_interval(self, interval):
+        """保存しているintervalの更新
+        Args:
+            interval (int): msec
+        """
+        t = TickInterval.objects.all().first()
+        if t:
+            t.interval = int(interval)
+            t.save()
+        else:
+            TickInterval.objects.create(interval=interval)
+
+    def _is_run(self):
+        return type(self.interval_proccess) == IntervalProcessing
 
     @property
     def _sensor_value(self):
@@ -75,12 +99,13 @@ class Tick:
 
     @property
     def _interval_saved(self):
-        if(t := TickInterval.objects.all().first()):
+        t = TickInterval.objects.all().first()
+        if t:
             return t.interval
         else:
             return None
 
     @_interval.setter
     def _interval(self, interval):
-        if(interval):
+        if interval:
             self.interval = interval

@@ -16,7 +16,9 @@ class IntervalProcessing:
         while not self._stop:
             _thread = threading.Thread(target=self._method, args=self._args)
             _thread.start()
-            next_time_sec = ((base_time_sec - time.time()) % self._interval) or self._interval
+            next_time_sec = (
+                (base_time_sec - time.time()) % self._interval
+            ) or self._interval
             time.sleep(next_time_sec)
 
     def start(self):
@@ -25,3 +27,9 @@ class IntervalProcessing:
 
     def stop(self):
         self._stop = True
+
+    def interval(self, interval):
+        """ intervalの更新
+        :interval (sec)
+        """
+        self._interval = interval
