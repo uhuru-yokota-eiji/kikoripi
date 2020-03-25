@@ -16,7 +16,7 @@ class Tick:
     running_instance = None
 
     def __init__(self, no):
-        self.no = no
+        self.no = str(no)
         self.channel_layer = None
         self._value = 0
         self.interval = self.DEFAULT_INTERVAL

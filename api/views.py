@@ -1,42 +1,54 @@
 from django.http.response import JsonResponse
-from grovepi import *
+
 from api.libs import bme280
+from api.libs.parse_api_params import ParseApiParams
 from api.libs.tick import Tick
+
+from grovepi import *
 
 
 def write(request):
+    params = request.GET.copy()
     # NOTICE: 初期化をすべて毎回実施するのが良いかは要調査
-    init_gpio_output()
+    _init_gpio_output()
 
-    response = request.GET.copy()
+    parse = ParseApiParams(params, mode="write")
+    response = {"result": "success", "msg": "Success"}
+    response["target"] = parse.target
 
-    target = response.get("target")
-    value = response.get("value")
-    interval = response.get("interval")
-    gpio_no = parse_gpio_no(target)
+    if parse.has_gp():
+        print("has_gp", parse.gp(0))
+        # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
+        digitalWrite(parse.gp(0)["no"], int(parse.gp(0)["value"]))
+        response["value"] = int(parse.gp(0)["value"])
 
-    if is_gp_target(target) and value == "1":
-        digitalWrite(gpio_no, 1)
-    else:
-        digitalWrite(gpio_no, 0)
+    # NOTICE: /writeでtickがtargetにある場合、intervalもある前提
+    if parse.has_tick():
+        # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
+        Tick.update_interval(parse.tick(0)["interval"])
+        response["interval"] = int(parse.tick(0)["interval"])
 
-    if interval:
-        Tick.update_interval(interval)
+    # TODO: 失敗時のメッセージ処理
+
     return JsonResponse(response)
 
 
 def read(request):
-    response = request.GET.copy()
+    params = request.GET.copy()
+    parse = ParseApiParams(params, mode="read")
 
-    target = response.get("target")
-    adc_no = parse_adc_no(target)
+    response = params
 
-    pinMode(adc_no, "INPUT")
+    adc_no = parse.adc(0)["no"]
+
     try:
+        pinMode(adc_no, "INPUT")
         sensor_value = analogRead(adc_no)
-    except IOError:
-        print("Error")
+    except IOError as e:
+        response["result"] = "error"
+        response["msg"] = "No sensor found"
     else:
+        response["result"] = "success"
         response["value"] = sensor_value
 
     return JsonResponse(response)
@@ -44,37 +56,26 @@ def read(request):
 
 def sensor(request):
     params = request.GET.copy()
-    # ids = params.getlist("ids")
+    response = {}
 
-    data = bme280.main()
-    # print(data)
-    response = {
-        # ids[0]: data
-        "BME0": data # とりいそぎ固定
-    }
+    params["ids"] = params.getlist("ids")
+    parse = ParseApiParams(params, mode="sensor")
+    if parse.has_bme():
+        response["BME0"] = bme280.main()
+        # response[parse.bme(0)["name"]] = {"hoge": "fuga"}
+    if parse.has_tick():
+        # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
+        tick = Tick(parse.tick(0)["no"])
+        response[parse.tick(0)["name"]] = tick.sensor_value
+
     return JsonResponse(response)
 
 
 def scan(request):
+    # NOTICE: 優先度が低いためI/Fだけ用意
     return JsonResponse({"result": True})
 
 
-def parse_gpio_no(target_str):
-    return int(target_str.replace("GP", ""))
-
-
-def parse_adc_no(target_str):
-    '''
-    A(n) Port is Pin (n+14) Port
-    ex) A0 Port is Pin 14 Port
-    '''
-    return int(target_str.replace("ADC", "")) + 14
-
-
-def is_gp_target(target_str):
-    return target_str.startswith("GP")
-
-
-def init_gpio_output():
+def _init_gpio_output():
     for no in range(8):
         pinMode(no + 1, "OUTPUT")
