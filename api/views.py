@@ -17,10 +17,10 @@ def write(request):
     response["target"] = parse.target
 
     if parse.has_gp():
-        print("has_gp", parse.gp(0))
         # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
-        digitalWrite(parse.gp(0)["no"], int(parse.gp(0)["value"]))
-        response["value"] = int(parse.gp(0)["value"])
+        value = int(parse.gp(0)["value"])
+        digitalWrite(parse.gp(0)["no"], value)
+        response["value"] = value
 
     # NOTICE: /writeでtickがtargetにある場合、intervalもある前提
     if parse.has_tick():
