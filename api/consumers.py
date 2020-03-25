@@ -75,8 +75,8 @@ class ApiConsumer(WebsocketConsumer):
 
     def run_tick(self):
         if tick_nos := self.sensor_ticks():
-            self.tick = self.tick or Tick(self.channel_layer, tick_nos)
-            self.tick.start()
+            self.tick = self.tick or Tick(tick_nos[0])
+            self.tick.start(self.channel_layer)
 
     def stop_tick(self):
         if type(self.tick) == Tick:

@@ -15,16 +15,18 @@ class Tick:
     # 同時に１インスタンスのみ実行する想定
     running_instance = None
 
-    def __init__(self, channel_layer, nos):
-        self.channel_layer = channel_layer
-        self.nos = nos  # NOTICE: 現在未使用。同じTICKを複数利用した場合を想定
+    def __init__(self, no):
+        self.no = no
+        self.channel_layer = None
         self._value = 0
         self.interval = self.DEFAULT_INTERVAL
         self.group_name = settings.CHANNEL_GROUP_NAME
         self.interval_proccess = None
         self.is_stop = True
 
-    def start(self):
+    def start(self, channel_layer):
+        self.channel_layer = channel_layer
+
         self.stop()
         self.interval_proccess = IntervalProcessing(
             self._interval / 1000, self._send_sensor_value
@@ -47,12 +49,15 @@ class Tick:
             {
                 "type": "send_client",
                 "result": {
-                    # NOTICE: no=0で固定。今後複数扱うようであればself.nosを利用する。
-                    settings.SENSOR_NAME_TICK + "0": self._sensor_value,
+                    self.sensor_name: self._sensor_value_ws,
                     "timestamp": time.time(),
                 },
             },
         )
+
+    @property
+    def sensor_name(self):
+        return settings.SENSOR_NAME_TICK + self.no
 
     def send_client(self, event):
         self.send(json.dumps(event["result"]))
@@ -66,29 +71,43 @@ class Tick:
 
         self = cls.running_instance
 
-        self._interval = _interval_ms
+        self._update_stored_interval(_interval_ms)
 
-        self._update_stored_interval()
         if self._is_run():
             self.interval_proccess.interval(self._interval / 1000)
 
-    def _update_stored_interval(self):
+    def _update_stored_interval(self, interval):
         """保存しているintervalの更新
         """
         t = TickInterval.objects.all().first()
         if t:
-            t.interval = self._interval
+            t.interval = interval
             t.save()
         else:
-            TickInterval.objects.create(interval=self._interval)
+            TickInterval.objects.create(interval=interval)
 
     def _is_run(self):
         return type(self.interval_proccess) == IntervalProcessing
 
     @property
-    def _sensor_value(self):
+    def _sensor_value_ws(self):
+        """websocket通信時のセンサー値
+        Returns:
+            int: 1 or 0 を繰り返す
+        """
         self._value = 1 if self._value == 0 else 0
         return self._value
+
+    @property
+    def sensor_value(self):
+        """/sensor apiで取得時のセンサー値
+        Returns:
+            json["msg"]: 固定メッセージ
+            json["id"]: wss用識別子  #TODO 現在はとりいそぎsensor_name
+        """
+
+        value = {"msg": "Use listen interface for WebSocket", "id": self.sensor_name}
+        return value
 
     @property
     def _interval(self):
@@ -105,7 +124,7 @@ class Tick:
 
     @_interval.setter
     def _interval(self, interval):
-        if type(interval) == int and interval > 0:
+        if interval > 0:
             self.interval = interval
         else:
             print(f"interval value {interval} is invalid")
