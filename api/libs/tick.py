@@ -64,25 +64,23 @@ class Tick:
             _interval_ms (int): msec
         """
 
-        interval_ms = int(_interval_ms)
-
         self = cls.running_instance
 
-        self._update_stored_interval(interval_ms)
-        if self._is_run():
-            self.interval_proccess.interval(interval_ms / 1000)
+        self._interval = _interval_ms
 
-    def _update_stored_interval(self, interval):
+        self._update_stored_interval()
+        if self._is_run():
+            self.interval_proccess.interval(self._interval / 1000)
+
+    def _update_stored_interval(self):
         """保存しているintervalの更新
-        Args:
-            interval (int): msec
         """
         t = TickInterval.objects.all().first()
         if t:
-            t.interval = int(interval)
+            t.interval = self._interval
             t.save()
         else:
-            TickInterval.objects.create(interval=interval)
+            TickInterval.objects.create(interval=self._interval)
 
     def _is_run(self):
         return type(self.interval_proccess) == IntervalProcessing
@@ -107,5 +105,7 @@ class Tick:
 
     @_interval.setter
     def _interval(self, interval):
-        if interval:
+        if type(interval) == int and interval > 0:
             self.interval = interval
+        else:
+            print(f"interval value {interval} is invalid")

@@ -7,7 +7,6 @@ from api.libs.tick import Tick
 
 
 class ApiConsumer(WebsocketConsumer):
-
     def __init__(self, *args, **kwargs):
         self.op = ""
         self.sensor_names = []
@@ -17,11 +16,9 @@ class ApiConsumer(WebsocketConsumer):
         super().__init__(*args, **kwargs)
 
     def connect(self):
-        print("connect")
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
-            self.channel_name
+            self.room_group_name, self.channel_name
         )
 
         self.accept()
@@ -32,8 +29,7 @@ class ApiConsumer(WebsocketConsumer):
         self.stop_tick()
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
-            self.room_group_name,
-            self.channel_name
+            self.room_group_name, self.channel_name
         )
 
     # Receive message from WebSocket
@@ -44,47 +40,38 @@ class ApiConsumer(WebsocketConsumer):
         # TODO validate
         # validate(text_data_json)
 
-        op = text_data_json['op']
-        if(op == "listen"):
-            self.sensor_names = text_data_json['v']
+        op = text_data_json["op"]
+        if op == "listen":
+            self.sensor_names = text_data_json["v"]
 
             # Send message to room group
             self.send_client_sync(text_data_json)
 
             if tick_nos := self.sensor_ticks():
                 self.run_tick()
-        elif(op == "scan"):
+        elif op == "scan":
             self.send_client_sync({"result": "ok"})
-        elif(op == "stop"):
+        elif op == "stop":
             self.stop_tick()
-        elif(op == "debug"):  # debug mode for dev
-            self.send_client_sync(
-                {"v": self.sensor_names})
+        elif op == "debug":  # debug mode for dev
+            self.send_client_sync({"v": self.sensor_names})
         else:
             pass
 
     def send_client_sync(self, result):
         async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'send_client',
-                'result': result
-            }
+            self.room_group_name, {"type": "send_client", "result": result}
         )
 
     def send_client(self, event):
-        self.send(json.dumps(event['result']))
+        self.send(json.dumps(event["result"]))
 
     # def send_ws(self):
     def sensor_value(self):
         # TODO: 今はBME280固定
         # data = bme280.main()
         data = {"val": "dummy"}
-        self.send_client_sync(
-            {
-                "BME0": data
-            }
-        )
+        self.send_client_sync({"BME0": data})
 
     def run_tick(self):
         if tick_nos := self.sensor_ticks():

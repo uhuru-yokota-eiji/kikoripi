@@ -14,15 +14,14 @@ def write(request):
     value = response.get("value")
     interval = response.get("interval")
     gpio_no = parse_gpio_no(target)
-    if gpio_no:
-        if is_gp_target(target) and value == "1":
-            digitalWrite(gpio_no, 1)
-        else:
-            digitalWrite(gpio_no, 0)
+
+    if is_gp_target(target) and value == "1":
+        digitalWrite(gpio_no, 1)
+    else:
+        digitalWrite(gpio_no, 0)
 
     if interval:
         Tick.update_interval(interval)
-
     return JsonResponse(response)
 
 
@@ -51,7 +50,7 @@ def sensor(request):
     # print(data)
     response = {
         # ids[0]: data
-        "BME0": data  # とりいそぎ固定
+        "BME0": data # とりいそぎ固定
     }
     return JsonResponse(response)
 
@@ -61,20 +60,14 @@ def scan(request):
 
 
 def parse_gpio_no(target_str):
-    gpio_no = target_str.replace("GP", "")
-    if gpio_no == target_str:
-        return None
-    try:
-        return int(gpio_no)
-    except ValueError:
-        return None
+    return int(target_str.replace("GP", ""))
 
 
 def parse_adc_no(target_str):
-    """
+    '''
     A(n) Port is Pin (n+14) Port
     ex) A0 Port is Pin 14 Port
-    """
+    '''
     return int(target_str.replace("ADC", "")) + 14
 
 
