@@ -1,10 +1,11 @@
 class ApiResponse:
 
-    RESULT_KEY = "result"
-    RESULT_VALUE_SUCCESS = "success"
-    RESULT_VALUE_ERROR = "error"
-    MESSAGE_KEY = "msg"
-    MESSAGE_VALUE_SUCCESS = "Success"
+    KEY_RESULT = "result"
+    KEY_MESSAGE = "msg"
+    KEY_VALUE = "v"
+    VALUE_RESULT_SUCCESS = "success"
+    VALUE_RESULT_ERROR = "error"
+    VALUE_MESSAGE_SUCCESS = "Success"
 
     def __init__(self, args={}):
         self._response = {}
@@ -21,9 +22,9 @@ class ApiResponse:
 
     def success(self, msg=""):
         if not msg:
-            msg = self.MESSAGE_VALUE_SUCCESS
+            msg = self.VALUE_MESSAGE_SUCCESS
 
-        params = {self.RESULT_KEY: self.RESULT_VALUE_SUCCESS, self.MESSAGE_KEY: msg}
+        params = {self.KEY_RESULT: self.VALUE_RESULT_SUCCESS, self.KEY_MESSAGE: msg}
         self.set_params(params)
 
     def failure(self, msg=""):
@@ -31,8 +32,11 @@ class ApiResponse:
         if not msg:
             msg = self.RESULT_VALUE_ERROR
 
-        params = {self.RESULT_KEY: self.RESULT_VALUE_ERROR, self.MESSAGE_KEY: msg}
+        params = {self.KEY_RESULT: self.VALUE_RESULT_ERROR, self.KEY_MESSAGE: msg}
         self.set_params(params)
+
+    def value(self, v):
+        self.set_params({self.KEY_VALUE: v})
 
     @property
     def response(self):

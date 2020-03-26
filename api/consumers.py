@@ -4,6 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.conf import settings
 
+from api.libs.api_response import ApiResponse
 from api.libs.bme280_handler import Bme280Handler
 from api.libs.tick import Tick
 
@@ -36,36 +37,44 @@ class ApiConsumer(WebsocketConsumer):
 
     # Receive message from WebSocket
     def receive(self, text_data):
+        api_response = ApiResponse()
+
         try:
             text_data_json = json.loads(text_data)
         except json.JSONDecodeError as e:
             print("json.JSONDecodeError", e)
-            self.send_client_sync(
-                {"result": "error", "msg": "json format is invalid", "json": text_data}
-            )
+            api_response.failure("json format is invalid")
+            api_response.value(text_data)
+            self._send_client_sync(api_response.response)
         else:
             # TODO validate
             # validate(text_data_json)
 
             op = text_data_json["op"]
+
             if op == "listen":
                 self.sensor_names = text_data_json["v"]
 
                 # Send message to room group
-                self.send_client_sync(text_data_json)
+                api_response.success()
 
                 if tick_nos := self.sensor_ticks():
                     self.run_tick()
             elif op == "scan":
-                self.send_client_sync({"result": "ok"})
+                api_response.success()
+                api_response.value(
+                    # dummy scanned info
+                    [{"name": "scaned_sensor_name", "id": "scaned_sensor_id"}]
+                )
             elif op == "stop":
                 self.stop_tick()
-            elif op == "debug":  # debug mode for dev
-                self.send_client_sync({"v": self.sensor_names})
+                api_response.success("Worker stopped")
             else:
-                pass
+                api_response.failure("No operation")
 
-    def send_client_sync(self, result):
+            self._send_client_sync(api_response.response)
+
+    def _send_client_sync(self, result):
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {"type": "send_client", "result": result}
         )
@@ -76,7 +85,7 @@ class ApiConsumer(WebsocketConsumer):
     # def send_ws(self):
     def sensor_value(self):
         # TODO: 今はBME280固定
-        self.send_client_sync({"BME0": Bme280Handler.main()})
+        self._send_client_sync({"BME0": Bme280Handler.main()})
 
     def run_tick(self):
         if tick_nos := self.sensor_ticks():

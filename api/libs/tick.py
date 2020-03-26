@@ -48,10 +48,7 @@ class Tick:
             self.group_name,
             {
                 "type": "send_client",
-                "result": {
-                    self.sensor_name: self._sensor_value_ws,
-                    "timestamp": time.time(),
-                },
+                "result": {self.sensor_name: self._sensor_value_ws},
             },
         )
 
