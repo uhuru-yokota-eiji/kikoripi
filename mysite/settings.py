@@ -31,12 +31,7 @@ SECRET_KEY = "d@fnn=1*v*&wfe8f5865t23tydlpeyz)^w=pae&c*luvgg&-9x"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "*"
-    # os.getenv("LOCAL_HOST"),  # for local develop
-    # os.getenv("HEROKU_HOST"),  # for heroku demo
-    # os.getenv("RASPI_HOST"),  # for raspi
-]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -146,3 +141,5 @@ SENSOR_NAME_TICK = "TICK"
 SENSOR_NAME_BME = "BME"
 SENSOR_NAME_GP = "GP"
 SENSOR_NAME_ADC = "ADC"
+
+ENV = os.environ.get("ENV")

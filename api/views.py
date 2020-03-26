@@ -2,10 +2,9 @@ from django.http.response import JsonResponse
 
 from api.libs import bme280
 from api.libs.api_response import ApiResponse
+from api.libs.grovepi_handler import GrovepiHandler
 from api.libs.parse_api_params import ParseApiParams
 from api.libs.tick import Tick
-
-# from grovepi import *
 
 
 def write(request):
@@ -14,12 +13,12 @@ def write(request):
     api_response = ApiResponse()
 
     # NOTICE: 初期化をすべて毎回実施するのが良いかは要調査
-    # _init_gpio_output()
+    _init_gpio_output()
 
     if parse.has_gp():
         # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
         value = int(parse.gp(0)["value"])
-        # digitalWrite(parse.gp(0)["no"], value)
+        GrovepiHandler.digitalWrite(parse.gp(0)["no"], value)
         api_response.set_params({"value": value})
 
     # NOTICE: /writeでtickがtargetにある場合、intervalもある前提
@@ -42,9 +41,8 @@ def read(request):
     adc_no = parse.adc(0)["no"]
 
     try:
-        # pinMode(adc_no, "INPUT")
-        # sensor_value = analogRead(adc_no)
-        sensor_value = 10
+        GrovepiHandler.pinMode(adc_no, "INPUT")
+        sensor_value = GrovepiHandler.analogRead(adc_no)
     except IOError as e:
         # TODO: exceptの例外の種類とエラーメッセージをあわせる
         api_response.failure("No sensor found")
@@ -79,4 +77,4 @@ def scan(request):
 
 def _init_gpio_output():
     for no in range(8):
-        pinMode(no + 1, "OUTPUT")
+        GrovepiHandler.pinMode(no + 1, "OUTPUT")
