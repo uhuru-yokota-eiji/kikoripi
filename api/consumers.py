@@ -36,29 +36,34 @@ class ApiConsumer(WebsocketConsumer):
 
     # Receive message from WebSocket
     def receive(self, text_data):
-        # TODO: jsonじゃない場合のエラー処理が必要
-        text_data_json = json.loads(text_data)
-
-        # TODO validate
-        # validate(text_data_json)
-
-        op = text_data_json["op"]
-        if op == "listen":
-            self.sensor_names = text_data_json["v"]
-
-            # Send message to room group
-            self.send_client_sync(text_data_json)
-
-            if tick_nos := self.sensor_ticks():
-                self.run_tick()
-        elif op == "scan":
-            self.send_client_sync({"result": "ok"})
-        elif op == "stop":
-            self.stop_tick()
-        elif op == "debug":  # debug mode for dev
-            self.send_client_sync({"v": self.sensor_names})
+        try:
+            text_data_json = json.loads(text_data)
+        except json.JSONDecodeError as e:
+            print("json.JSONDecodeError", e)
+            self.send_client_sync(
+                {"result": "error", "msg": "json format is invalid", "json": text_data}
+            )
         else:
-            pass
+            # TODO validate
+            # validate(text_data_json)
+
+            op = text_data_json["op"]
+            if op == "listen":
+                self.sensor_names = text_data_json["v"]
+
+                # Send message to room group
+                self.send_client_sync(text_data_json)
+
+                if tick_nos := self.sensor_ticks():
+                    self.run_tick()
+            elif op == "scan":
+                self.send_client_sync({"result": "ok"})
+            elif op == "stop":
+                self.stop_tick()
+            elif op == "debug":  # debug mode for dev
+                self.send_client_sync({"v": self.sensor_names})
+            else:
+                pass
 
     def send_client_sync(self, result):
         async_to_sync(self.channel_layer.group_send)(
