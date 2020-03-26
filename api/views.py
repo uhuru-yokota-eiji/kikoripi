@@ -1,6 +1,6 @@
 from django.http.response import JsonResponse
 
-from api.libs import bme280
+from api.libs.bme280_handler import Bme280Handler
 from api.libs.api_response import ApiResponse
 from api.libs.grovepi_handler import GrovepiHandler
 from api.libs.parse_api_params import ParseApiParams
@@ -60,8 +60,7 @@ def sensor(request):
     params["ids"] = params.getlist("ids")
     parse = ParseApiParams(params, mode="sensor")
     if parse.has_bme():
-        # api_response.set_params({"BME0": bme280.main()})
-        api_response.set_params({"BME0": {"dummy_key": "dummy_value"}})
+        api_response.set_params({"BME0": Bme280Handler.main()})
     if parse.has_tick():
         # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
         tick = Tick(parse.tick(0)["no"])

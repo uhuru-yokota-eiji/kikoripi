@@ -1,8 +1,10 @@
-from django.conf import settings
+import json
+
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-import json
-from api.libs import bme280
+from django.conf import settings
+
+from api.libs.bme280_handler import Bme280Handler
 from api.libs.tick import Tick
 
 
@@ -69,9 +71,7 @@ class ApiConsumer(WebsocketConsumer):
     # def send_ws(self):
     def sensor_value(self):
         # TODO: 今はBME280固定
-        # data = bme280.main()
-        data = {"val": "dummy"}
-        self.send_client_sync({"BME0": data})
+        self.send_client_sync({"BME0": Bme280Handler.main()})
 
     def run_tick(self):
         if tick_nos := self.sensor_ticks():
