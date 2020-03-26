@@ -7,8 +7,8 @@ class ApiConfig(AppConfig):
 
     @classmethod
     def is_env_local(cls):
-        return settings.ENV == "local"
+        return settings.ENV_NAME == "local"
 
     @classmethod
     def is_env_raspi(cls):
-        return settings.ENV == "raspi"
+        return settings.ENV_NAME == "raspi"

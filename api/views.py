@@ -12,7 +12,7 @@ def write(request):
     parse = ParseApiParams(params, mode="write")
     api_response = ApiResponse()
 
-    # NOTICE: 初期化をすべて毎回実施するのが良いかは要調査
+    # NOTICE: 初期化をすべてのpinに毎回実施するのが良いかは要調査
     _init_gpio_output()
 
     if parse.has_gp():
