@@ -21,7 +21,7 @@ def write(request):
         GrovepiHandler.digitalWrite(parse.gp(0)["no"], value)
         api_response.set_params({"value": value})
 
-    # NOTICE: /writeでtickがtargetにある場合、intervalもある前提
+    # NOTICE: /writeでtickが"target"キーにある場合、"interval"もある前提
     if parse.has_tick():
         # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
         Tick.update_interval(parse.tick(0)["interval"])
@@ -43,8 +43,8 @@ def read(request):
     try:
         GrovepiHandler.pinMode(adc_no, "INPUT")
         sensor_value = GrovepiHandler.analogRead(adc_no)
-    except IOError as e:
-        # TODO: exceptの例外の種類とエラーメッセージをあわせる
+    except IOError:
+        # TODO: except句とエラーの種類を増やし、エラーメッセージをエラー内容にあわせる
         api_response.failure("No sensor found")
     else:
         api_response.success()
