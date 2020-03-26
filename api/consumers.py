@@ -6,6 +6,7 @@ from django.conf import settings
 
 from api.libs.api_response import ApiResponse
 from api.libs.bme280_handler import Bme280Handler
+from api.libs.parse_api_params import ParseApiParams
 from api.libs.tick import Tick
 
 
@@ -51,9 +52,10 @@ class ApiConsumer(WebsocketConsumer):
                 self.sensor_names = text_data_json["v"]
                 api_response.success()
 
-                tick_nos = self.sensor_ticks()
-                if tick_nos:
-                    self.run_tick(tick_nos)
+                parse = ParseApiParams(text_data_json, mode="listen")
+                # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
+                if parse.tick(0):
+                    self.run_tick(0)
             elif op == "scan":
                 api_response.success()
                 api_response.value(
@@ -76,19 +78,10 @@ class ApiConsumer(WebsocketConsumer):
     def send_client(self, event):
         self.send(json.dumps(event["result"]))
 
-    def run_tick(self, tick_nos):
-        # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
-        self.tick = self.tick or Tick(tick_nos[0])
+    def run_tick(self, no):
+        self.tick = self.tick or Tick(no)
         self.tick.start(self.channel_layer)
 
     def stop_tick(self):
         if type(self.tick) == Tick:
             self.tick.stop()
-
-    def sensor_ticks(self):
-        tick_nos = []
-        for sensor_name in self.sensor_names:
-            if sensor_name.startswith(settings.SENSOR_NAME_TICK):
-                ticks = sensor_name.split(settings.SENSOR_NAME_TICK)
-                tick_nos.append(ticks[1])
-        return tick_nos

@@ -19,6 +19,10 @@ class ParseApiParams:
         settings.SENSOR_NAME_ADC,
     ]
 
+    LISTEN_SENSOR_NAMES = [
+        settings.SENSOR_NAME_TICK,
+    ]
+
     def __init__(self, params, mode):
         # paramsのtypeはdjango.http.request.QueryDict
         self._params = params
@@ -40,10 +44,13 @@ class ParseApiParams:
             self._parse_main(
                 self.target, self.WRITE_SENSOR_NAMES, ["value", "interval"]
             )
-
         elif self._mode == "read":
             self.target = self._params.get("target", "")
             self._parse_main(self.target, self.READ_SENSOR_NAMES, ["type", "sampling"])
+        elif self._mode == "listen":
+            self.ids = self._params.get("v")
+            for sensor_id in self.ids:
+                self._parse_main(sensor_id, self.LISTEN_SENSOR_NAMES)
         else:
             pass
 
@@ -51,8 +58,13 @@ class ParseApiParams:
         """sensor名とsensor番号を分離し値を取得
 
         Args:
-            target_name (str): 対象センサー名
+            target_name (str): 対象センサー名 ex) BME0
             sensor_names (list): 解析対象のセンサー名一覧
+
+        _result = {
+            "BME":[{"no":0,・・・}]
+            "TICK":[{"no":0,・・・}]
+            }
         """
         for sensor_name in sensor_names:
             if target_sensor_name.startswith(sensor_name):
