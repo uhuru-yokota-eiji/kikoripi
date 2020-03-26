@@ -45,21 +45,18 @@ class ApiConsumer(WebsocketConsumer):
             print("json.JSONDecodeError", e)
             api_response.failure("json format is invalid")
             api_response.value(text_data)
-            self._send_client_sync(api_response.response)
         else:
             # TODO validate
             # validate(text_data_json)
-
             op = text_data_json["op"]
-
             if op == "listen":
                 self.sensor_names = text_data_json["v"]
-
                 # Send message to room group
                 api_response.success()
 
-                if tick_nos := self.sensor_ticks():
-                    self.run_tick()
+                tick_nos = self.sensor_ticks()
+                if tick_nos:
+                    self.run_tick(tick_nos)
             elif op == "scan":
                 api_response.success()
                 api_response.value(
@@ -72,7 +69,7 @@ class ApiConsumer(WebsocketConsumer):
             else:
                 api_response.failure("No operation")
 
-            self._send_client_sync(api_response.response)
+        self._send_client_sync(api_response.response)
 
     def _send_client_sync(self, result):
         async_to_sync(self.channel_layer.group_send)(
@@ -82,15 +79,10 @@ class ApiConsumer(WebsocketConsumer):
     def send_client(self, event):
         self.send(json.dumps(event["result"]))
 
-    # def send_ws(self):
-    def sensor_value(self):
-        # TODO: 今はBME280固定
-        self._send_client_sync({"BME0": Bme280Handler.main()})
-
-    def run_tick(self):
-        if tick_nos := self.sensor_ticks():
-            self.tick = self.tick or Tick(tick_nos[0])
-            self.tick.start(self.channel_layer)
+    def run_tick(self, tick_nos):
+        # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
+        self.tick = self.tick or Tick(tick_nos[0])
+        self.tick.start(self.channel_layer)
 
     def stop_tick(self):
         if type(self.tick) == Tick:
