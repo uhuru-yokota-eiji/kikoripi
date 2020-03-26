@@ -19,7 +19,6 @@ class ApiConsumer(WebsocketConsumer):
         super().__init__(*args, **kwargs)
 
     def connect(self):
-        # Join room group
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name, self.channel_name
         )
@@ -30,7 +29,6 @@ class ApiConsumer(WebsocketConsumer):
         # TODO: close_code が何か調べる
         print("disconnect", close_code)
         self.stop_tick()
-        # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name, self.channel_name
         )
@@ -51,7 +49,6 @@ class ApiConsumer(WebsocketConsumer):
             op = text_data_json["op"]
             if op == "listen":
                 self.sensor_names = text_data_json["v"]
-                # Send message to room group
                 api_response.success()
 
                 tick_nos = self.sensor_ticks()
