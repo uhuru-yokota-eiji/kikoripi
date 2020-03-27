@@ -26,6 +26,7 @@ class IntervalProcessing:
 
     def _sleep_interval(self, base_time_sec):
         """_interval間隔の誤差を吸収してsleepさせる
+
         Args:
             base_time_sec (int): 定期実行開始時間
         """
@@ -44,3 +45,6 @@ class IntervalProcessing:
         """定期実行を停止
         """
         self._stop = True
+
+    def interval(self, interval):
+        self._interval = interval
