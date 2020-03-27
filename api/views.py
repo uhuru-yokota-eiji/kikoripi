@@ -70,8 +70,11 @@ def sensor(request):
 
 
 def scan(request):
-    # NOTICE: 優先度が低いためI/Fだけ用意
-    return JsonResponse({"result": True})
+    # NOTICE: 優先度が低いためdummyのI/Fだけ用意
+    api_response = ApiResponse()
+    api_response.success()
+    api_response.value([{"name": "scaned_sensor_name", "id": "scaned_sensor_id"}])
+    return JsonResponse(api_response.response)
 
 
 def _init_gpio_output():
