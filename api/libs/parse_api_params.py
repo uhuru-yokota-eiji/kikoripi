@@ -5,6 +5,11 @@ class ParseApiParams:
     """apiのクエリパラメータ解析
     """
 
+    MODE_SENSOR = "sensor"
+    MODE_WRITE = "write"
+    MODE_READ = "read"
+    MODE_LISTEN = "listen"
+
     SENSOR_SENSOR_NAMES = [
         settings.SENSOR_NAME_TICK,
         settings.SENSOR_NAME_BME,
@@ -23,69 +28,105 @@ class ParseApiParams:
         settings.SENSOR_NAME_TICK,
     ]
 
-    def __init__(self, params, mode):
-        # paramsのtypeはdjango.http.request.QueryDict
-        self._params = params
-        # write read sensor scan
-        self._mode = mode
+    API_MODE = {
+        MODE_SENSOR: {
+            "target_key": "ids",
+            "sensor_name_list": SENSOR_SENSOR_NAMES,
+            "other_keys": [],
+        },
+        MODE_WRITE: {
+            "target_key": "target",
+            "sensor_name_list": WRITE_SENSOR_NAMES,
+            "other_keys": ["value", "interval"],
+        },
+        MODE_READ: {
+            "target_key": "target",
+            "sensor_name_list": READ_SENSOR_NAMES,
+            "other_keys": ["type", "sampling"],
+        },
+        MODE_LISTEN: {
+            "target_key": "v",
+            "sensor_name_list": LISTEN_SENSOR_NAMES,
+            "other_keys": [],
+        },
+    }
 
+    def __init__(self, params, mode):
+        self._params = params
+        self._mode = mode
         self._result = {}
-        self._target_sensor_name = ""
-        self._ids = []
         self._parse()
 
     def _parse(self):
-        if self._mode == "sensor":
-            self.ids = self._params.get("ids")
-            for sensor_id in self.ids:
-                self._parse_main(sensor_id, self.SENSOR_SENSOR_NAMES)
-        elif self._mode == "write":
-            self.target = self._params.get("target", "")
-            self._parse_main(
-                self.target, self.WRITE_SENSOR_NAMES, ["value", "interval"]
-            )
-        elif self._mode == "read":
-            self.target = self._params.get("target", "")
-            self._parse_main(self.target, self.READ_SENSOR_NAMES, ["type", "sampling"])
-        elif self._mode == "listen":
-            self.ids = self._params.get("v")
-            for sensor_id in self.ids:
-                self._parse_main(sensor_id, self.LISTEN_SENSOR_NAMES)
-        else:
-            pass
+        """_paramsを解析し_result変数に結果保存
+        """
+        for target in self._targets:
+            self._parse_main(target)
 
-    def _parse_main(self, target_sensor_name, sensor_names, input_values=[]):
-        """sensor名とsensor番号を分離し値を取得
+    @property
+    def _setting_params(self):
+        """モードごとに設定されたdictを返す
+
+        Returns:
+            dict: API_MODE内の該当するmode
+        """
+        return self.API_MODE[self._mode]
+
+    @property
+    def _targets(self):
+        """解析対象のキーを配列で返す
+        対象が一つの場合、[]で配列にする
+
+        Returns:
+            list: 解析対象のキー名一覧 ex) ["TICK0", "BME0]
+        """
+        target = self._params.get(self._setting_params["target_key"])
+        return target if type(target) == list else [target]
+
+    def _parse_main(self, target_name):
+        """sensor名とsensor番号を分離し各sensor名ごとに情報を構造化し_result変数に結果保存
 
         Args:
-            target_name (str): 対象センサー名 ex) BME0
-            sensor_names (list): 解析対象のセンサー名一覧
+            target_name (str): 対象センサー名 ex) BME0, TICK1
 
-        _result = {
-            "BME":[{"no":0,・・・}]
-            "TICK":[{"no":0,・・・}]
+        _result変数に、例として以下の形式で保存する
+            {
+                "BME":[{"no":0, "temperature":26.0,・・・}],
+                "TICK":[{"no":1,・・・}],
+                ・・・
             }
         """
+        sensor_names = self._setting_params["sensor_name_list"]
         for sensor_name in sensor_names:
-            if target_sensor_name.startswith(sensor_name):
+            if target_name.startswith(sensor_name):
                 if self._result.get(sensor_name, 0) == 0:
                     self._result[sensor_name] = []
                 try:
-                    if sensor_name == settings.SENSOR_NAME_ADC:
-                        no = self._parse_adc_no(target_sensor_name)
-                    else:
-                        no = self._parse_no(target_sensor_name, sensor_name)
+                    no = self._parse_no(target_name, sensor_name)
                 except ValueError as e:
-                    print(f"sensor_name {target_sensor_name} is not include no:", e)
+                    print(f"sensor_name {target_name} is not include no:", e)
                 else:
-                    sensor_info = self._sensor_info(
-                        no, target_sensor_name, input_values
-                    )
+                    sensor_info = self._sensor_info(no, target_name)
                     self._result[sensor_name].append(sensor_info)
 
-    def _sensor_info(self, no, target_sensor_name, input_values):
-        sensor_info = {"no": no, "name": target_sensor_name}
-        for key in input_values:
+    def _sensor_info(self, no, target_name):
+        """sensorに関する情報を返す
+
+        Args:
+            no (str): sensor番号
+            target_name (str): sensor名
+
+        Returns:
+            dict: センサー毎の付属情報
+            ex)
+                {
+                    "no": 0,
+                    "name": "TICK0",
+                    "interval": 1000,
+                }
+        """
+        sensor_info = {"no": no, "name": target_name}
+        for key in self._setting_params["other_keys"]:
             val = self._params.get(key, "")
             if val:
                 sensor_info[key] = val
@@ -109,32 +150,33 @@ class ParseApiParams:
     def adc(self, ind):
         return self._result[settings.SENSOR_NAME_ADC][ind]
 
-    def _parse_no(self, target_str, sensor_name):
-        return int(target_str.replace(sensor_name, ""))
+    def _parse_no(self, target_name, sensor_name):
+        """target_nameからセンサー番号を返す
+
+        Args:
+            target_name (str): ターゲット名 ex) "BME0"
+            sensor_name (str): センサー名 ex) "BME"
+
+        Returns:
+            int: センサー番号 ex) 0
+        """
+        if sensor_name == settings.SENSOR_NAME_ADC:
+            no = self._parse_adc_no(target_name)
+        else:
+            no = self._parse_no_main(target_name, sensor_name)
+        return no
+
+    def _parse_no_main(self, target_name, sensor_name):
+        """センサー番号返すメイン処理
+        """
+        return int(target_name.replace(sensor_name, ""))
 
     def _parse_adc_no(self, target_str):
         """
         A(n) Port is Pin (n+14) Port
         ex) A0 Port is Pin 14 Port
         """
-        return self._parse_no(target_str, "ADC") + 14
+        return self._parse_no_main(target_str, "ADC") + 14
 
     def tick(self, ind):
         return self._result[settings.SENSOR_NAME_TICK][ind]
-
-    @property
-    def target(self):
-        return self._target_sensor_name
-
-    @target.setter
-    def target(self, target_sensor_name):
-        self._target_sensor_name = target_sensor_name
-
-    @property
-    def ids(self):
-        return self._ids
-
-    @ids.setter
-    def ids(self, ids):
-        # TODO: ids内の値に関してvalidation追加する
-        self._ids = ids

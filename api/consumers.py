@@ -5,7 +5,6 @@ from channels.generic.websocket import WebsocketConsumer
 from django.conf import settings
 
 from api.libs.api_response import ApiResponse
-from api.libs.bme280_handler import Bme280Handler
 from api.libs.parse_api_params import ParseApiParams
 from api.libs.tick import Tick
 

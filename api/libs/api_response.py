@@ -13,6 +13,10 @@ class ApiResponse:
             self.set_params(args)
 
     def set_params(self, kwargs):
+        """レスポンスとして必要なパラメータをdict型でセットする
+        Args:
+            kwargs (dict): 返したいパラメータ。ex) {"intervale": 2000}
+        """
         for k, v in kwargs.items():
             self._set_param(k, v)
 
@@ -21,6 +25,11 @@ class ApiResponse:
         self._response[key] = value
 
     def success(self, msg=""):
+        """処理正常時のレスポンス設定
+
+        Args:
+            msg (str, optional): レスポンスのメッセージを設定する. Defaults to "".
+        """
         if not msg:
             msg = self.VALUE_MESSAGE_SUCCESS
 
@@ -28,7 +37,11 @@ class ApiResponse:
         self.set_params(params)
 
     def failure(self, msg=""):
-        print("call failure")
+        """処理失敗時のレスポンス設定
+
+        Args:
+            msg (str, optional): レスポンスのメッセージを設定する. Defaults to "".
+        """
         if not msg:
             msg = self.RESULT_VALUE_ERROR
 
@@ -36,6 +49,11 @@ class ApiResponse:
         self.set_params(params)
 
     def value(self, v):
+        """固定のvalueキー（KEY_VALUEキー）の値をセットする
+
+        Args:
+            v (str or int): センサー値などの値
+        """
         self.set_params({self.KEY_VALUE: v})
 
     @property
