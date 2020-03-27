@@ -8,6 +8,16 @@ from api.libs.tick import Tick
 
 
 def write(request):
+    """ HTTP/GET /write コール時の処理
+    センサー名に応じて、デバイスに値を書き込む
+
+    Args:
+        request (QueryDict): リクエストパラメータ
+
+    Returns:
+        dict: クライアントに返すjson形式の値
+    """
+
     params = request.GET.copy()
     parse = ParseApiParams(params, mode="write")
     api_response = ApiResponse()
@@ -34,6 +44,15 @@ def write(request):
 
 
 def read(request):
+    """HTTP/GET /read コール時の処理
+    ADCのセンサー名に応じて、センサー値を読んで返す
+
+    Args:
+        request (QueryDict): リクエストパラメータ
+
+    Returns:
+        dict: クライアントに返すjson形式の値
+    """
     params = request.GET.copy()
     parse = ParseApiParams(params, mode="read")
     api_response = ApiResponse(params)
@@ -54,6 +73,15 @@ def read(request):
 
 
 def sensor(request):
+    """HTTP/GET /sensor コール時の処理
+    ADC以外のセンサー値を読んで返す
+
+    Args:
+        request (QueryDict): リクエストパラメータ
+
+    Returns:
+        dict: クライアントに返すjson形式の値
+    """
     params = request.GET.copy()
     api_response = ApiResponse()
 
@@ -70,6 +98,15 @@ def sensor(request):
 
 
 def scan(request):
+    """HTTP/GET /scan コール時の処理
+    接続しているセンサー値一覧を返す
+
+    Args:
+        request (QueryDict): リクエストパラメータ
+
+    Returns:
+        dict: クライアントに返すjson形式の値
+    """
     # NOTICE: 優先度が低いためdummyのI/Fだけ用意
     api_response = ApiResponse()
     api_response.success()
@@ -78,5 +115,8 @@ def scan(request):
 
 
 def _init_gpio_output():
+    """gpioのすべてのPINのモードをOUTPUTにする
+    GPIOに書き込み時の初期化処理。
+    """
     for no in range(8):
         GrovepiHandler.pinMode(no + 1, "OUTPUT")
