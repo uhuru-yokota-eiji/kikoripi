@@ -1,0 +1,17 @@
+{
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "editor.formatOnSave": true,
+  "python.linting.lintOnSave": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.pycodestyleEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": [
+    // blackとの互換を保つためのignoreとmax-line-length
+    "--ignore=E203, W503, W504",
+    "--max-line-length=88",
+  ],
+  "python.formatting.provider": "black",
+  "autoDocstring.docstringFormat": "google",
+  "python.linting.enabled": true
+}
