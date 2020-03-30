@@ -24,13 +24,13 @@ raspi上で動く、WSS(Web Sensor Server)とgrovePi+のセンサー（GPIO, ADC
 git clone https://github.com/uhuru-yokota-eiji/kikoripi
 cd kikoripi/
 
-# 開発環境の場合
-pip install/develop.txt
-cp .env.develop .env
-
 # RaspberryPi 上の場合
-#pip install/staging.txt
-#cp .env.staging .env
+pip install/staging.txt
+cp .env.staging .env
+
+# 開発環境の場合
+# pip install/develop.txt
+# cp .env.develop .env
 
 python mannage.py runserver localhost:3000
 ```
@@ -42,10 +42,34 @@ HTTP/GET
 % curl http://localhost:3000/scan
 {"result": "success", "msg": "Success", "v": [{"name": "scaned_sensor_name", "id": "scaned_sensor_id"}]}
 ```
-websocket
+WebSocket
 ```
 % wscat -c ws://localhost:3000/ws
 Connected (press CTRL+C to quit)
 > {"op":"scan"}
 < {"result": "success", "msg": "Success", "v": [{"name": "scaned_sensor_name", "id": "scaned_sensor_id"}]}
+```
+
+## Feature
+
+Interfaceは [kikori](https://gitlab.com/myst3m/kikori/) を参考に作成しています。
+
+* [HTTP/GET](https://gitlab.com/myst3m/kikori#httpget)
+* [WebSocket](https://gitlab.com/myst3m/kikori#websocket)
+
+### 仮想デバイス(TICK)
+
+TICKは、WebSocketのIntervalと連動していて、Intervalで設定した周期でOn/Offを繰り返します
+
+ex)
+```
+% wscat -c ws://localhost:8000/ws
+Connected (press CTRL+C to quit)
+> {"op": "listen", "v":["TICK0"]}
+< {"result": "success", "msg": "Success"}
+< {"TICK0": 1}
+< {"TICK0": 0}
+< {"TICK0": 1}
+< {"TICK0": 0}
+・・・
 ```
