@@ -2,7 +2,7 @@
 
 ## About
 
-raspi上で動く、WSS(Web Sensor Server)とgrovePi+のセンサー（GPIO, ADC, DAC, I2C）ドライバー群
+raspi上で動く、WSS(Web Sensor Server)とgrovePi+のセンサー（GPIO, ADC, I2C）ドライバー群
 
 ## Environment
 
@@ -13,8 +13,8 @@ raspi上で動く、WSS(Web Sensor Server)とgrovePi+のセンサー（GPIO, ADC
 ### hardware
 * RaspberryPi 3 Model b+
 * GrovePi+
+  * GPIO Sensor. Ex: [LED Socket Kit](http://wiki.seeedstudio.com/Grove-LED_Socket_Kit/)
   * ADC Sensor. Ex: [Light Sensor](http://wiki.seeedstudio.com/Grove-Light_Sensor/)
-  * DAC Sensor. Ex: [LED Socket Kit](http://wiki.seeedstudio.com/Grove-LED_Socket_Kit/)
   * I2C Sensor. Ex: [BME280](http://wiki.seeedstudio.com/Grove-Barometer_Sensor-BME280/)
 
 
