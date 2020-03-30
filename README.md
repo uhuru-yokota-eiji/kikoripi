@@ -2,15 +2,15 @@
 
 ## About
 
-raspi上で動く、WSS(Web Sensor Server)とgrovePi+のセンサー（GPIO, ADC, DAC, I2C）ドライバー郡
+raspi上で動く、WSS(Web Sensor Server)とgrovePi+のセンサー（GPIO, ADC, DAC, I2C）ドライバー群
 
 ## Environment
 
-### softwear
+### software
 * python 3.8.1
 * Django 3.0.4
 
-### hardwear
+### hardware
 * RaspberryPi 3 Model b+
 * GrovePi+
   * ADC Sensor. Ex: [Light Sensor](http://wiki.seeedstudio.com/Grove-Light_Sensor/)
