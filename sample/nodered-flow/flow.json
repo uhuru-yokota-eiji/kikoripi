@@ -1,0 +1,1510 @@
+[
+  {
+    "id": "b863c8a6.457be8",
+    "type": "tab",
+    "label": "demo app",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "20f73f5b.f0921",
+    "type": "tab",
+    "label": "湿度判定（ヒステリシス考慮）",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "4ade60cd.401f9",
+    "type": "tab",
+    "label": "demo app websocket",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "95857a05.9d0028",
+    "type": "tab",
+    "label": "init",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "78b0793.5dfa388",
+    "type": "tab",
+    "label": "BEM280サンプル",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "4d2160e2.ec8b2",
+    "type": "tab",
+    "label": "websocket サンプル",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "6135a9ef.3c07e8",
+    "type": "websocket-listener",
+    "z": "",
+    "path": "/ws",
+    "wholemsg": "false"
+  },
+  {
+    "id": "3f32a29b.7c7dae",
+    "type": "websocket-client",
+    "z": "",
+    "path": "ws://localhost:8000/ws",
+    "tls": "",
+    "wholemsg": "false"
+  },
+  {
+    "id": "fbd3efe9.54fee",
+    "type": "websocket-client",
+    "z": "",
+    "path": "ws://192.168.0.17:3000/ws",
+    "tls": "",
+    "wholemsg": "false"
+  },
+  {
+    "id": "625d3f1a.0b51c",
+    "type": "websocket-client",
+    "z": "",
+    "path": "ws://localhost:3000/ws",
+    "tls": "",
+    "wholemsg": "false"
+  },
+  {
+    "id": "7d13cabf.5ad8e4",
+    "type": "ui_base",
+    "theme": {
+      "name": "theme-light",
+      "lightTheme": {
+        "default": "#0094CE",
+        "baseColor": "#0094CE",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": true,
+        "reset": false
+      },
+      "darkTheme": {
+        "default": "#097479",
+        "baseColor": "#097479",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": false
+      },
+      "customTheme": {
+        "name": "Untitled Theme 1",
+        "default": "#4B7930",
+        "baseColor": "#4B7930",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+      },
+      "themeState": {
+        "base-color": {
+          "default": "#0094CE",
+          "value": "#0094CE",
+          "edited": false
+        },
+        "page-titlebar-backgroundColor": {
+          "value": "#0094CE",
+          "edited": false
+        },
+        "page-backgroundColor": {
+          "value": "#fafafa",
+          "edited": false
+        },
+        "page-sidebar-backgroundColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "group-textColor": {
+          "value": "#1bbfff",
+          "edited": false
+        },
+        "group-borderColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "group-backgroundColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "widget-textColor": {
+          "value": "#111111",
+          "edited": false
+        },
+        "widget-backgroundColor": {
+          "value": "#0094ce",
+          "edited": false
+        },
+        "widget-borderColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "base-font": {
+          "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+        }
+      },
+      "angularTheme": {
+        "primary": "indigo",
+        "accents": "blue",
+        "warn": "red",
+        "background": "grey"
+      }
+    },
+    "site": {
+      "name": "Node-RED ダッシュボード",
+      "hideToolbar": "false",
+      "allowSwipe": "false",
+      "lockMenu": "false",
+      "allowTempTheme": "true",
+      "dateFormat": "YYYY/MM/DD",
+      "sizes": {
+        "sx": 48,
+        "sy": 48,
+        "gx": 6,
+        "gy": 6,
+        "cx": 6,
+        "cy": 6,
+        "px": 0,
+        "py": 0
+      }
+    }
+  },
+  {
+    "id": "ec577750.934bf8",
+    "type": "inject",
+    "z": "b863c8a6.457be8",
+    "name": "inject per 1 sec",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "1",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 130,
+    "y": 80,
+    "wires": [
+      [
+        "4b2a87e9.3b2f78"
+      ]
+    ]
+  },
+  {
+    "id": "32059de9.8ef402",
+    "type": "debug",
+    "z": "b863c8a6.457be8",
+    "name": "",
+    "active": false,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "x": 990,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "15090814.b6c3f8",
+    "type": "change",
+    "z": "b863c8a6.457be8",
+    "name": "1 or 0 per sec",
+    "rules": [
+      {
+        "t": "set",
+        "p": "value",
+        "pt": "msg",
+        "to": "$floor(msg.timestamp / 1000) % 2",
+        "tot": "jsonata"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 740,
+    "y": 220,
+    "wires": [
+      [
+        "c05989cb.c22098"
+      ]
+    ]
+  },
+  {
+    "id": "2e78113e.7cd3de",
+    "type": "inject",
+    "z": "78b0793.5dfa388",
+    "name": "",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 220,
+    "y": 140,
+    "wires": [
+      [
+        "f2c4571a.454eb8"
+      ]
+    ]
+  },
+  {
+    "id": "f2c4571a.454eb8",
+    "type": "http request",
+    "z": "78b0793.5dfa388",
+    "name": "",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://localhost:3000/sensor?ids=BME0",
+    "tls": "",
+    "x": 390,
+    "y": 140,
+    "wires": [
+      [
+        "800701df.e0d99"
+      ]
+    ]
+  },
+  {
+    "id": "800701df.e0d99",
+    "type": "debug",
+    "z": "78b0793.5dfa388",
+    "name": "payload",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload.BME0",
+    "x": 560,
+    "y": 140,
+    "wires": []
+  },
+  {
+    "id": "304a023f.17526e",
+    "type": "comment",
+    "z": "95857a05.9d0028",
+    "name": "環境変数PORTを設定する",
+    "info": "",
+    "x": 190,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "a11cc777.5e00c8",
+    "type": "inject",
+    "z": "95857a05.9d0028",
+    "name": "",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.1,
+    "x": 110,
+    "y": 100,
+    "wires": [
+      [
+        "e6fb9860.f6c1b8"
+      ]
+    ]
+  },
+  {
+    "id": "f12e9100.5e003",
+    "type": "http request",
+    "z": "95857a05.9d0028",
+    "name": "raspy (:8000/scan)",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://0.0.0.0:8000/scan",
+    "tls": "",
+    "x": 350,
+    "y": 160,
+    "wires": [
+      [
+        "fcc6eb59.274ea8",
+        "1e596969.6f0f07"
+      ]
+    ]
+  },
+  {
+    "id": "fcc6eb59.274ea8",
+    "type": "debug",
+    "z": "95857a05.9d0028",
+    "name": "",
+    "active": false,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "x": 510,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "acd9d053.99499",
+    "type": "http request",
+    "z": "95857a05.9d0028",
+    "name": "kikori (:3000/scan)",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://localhost:3000/scan",
+    "tls": "",
+    "x": 350,
+    "y": 220,
+    "wires": [
+      [
+        "fcc6eb59.274ea8",
+        "42aac9a3.d23868"
+      ]
+    ]
+  },
+  {
+    "id": "b2ae36bd.7fc088",
+    "type": "change",
+    "z": "95857a05.9d0028",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "wss_port",
+        "pt": "global",
+        "to": "8000",
+        "tot": "num"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 750,
+    "y": 160,
+    "wires": [
+      [
+        "4c579bdc.cd3744"
+      ]
+    ]
+  },
+  {
+    "id": "1e596969.6f0f07",
+    "type": "switch",
+    "z": "95857a05.9d0028",
+    "name": "response ok?",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "nnull"
+      },
+      {
+        "t": "null"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 540,
+    "y": 160,
+    "wires": [
+      [
+        "b2ae36bd.7fc088"
+      ],
+      [
+        "acd9d053.99499"
+      ]
+    ]
+  },
+  {
+    "id": "42aac9a3.d23868",
+    "type": "switch",
+    "z": "95857a05.9d0028",
+    "name": "response ok?",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "nnull"
+      },
+      {
+        "t": "null"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 540,
+    "y": 220,
+    "wires": [
+      [
+        "7506a6f.2740558"
+      ],
+      [
+        "d80538b5.a38738"
+      ]
+    ]
+  },
+  {
+    "id": "7506a6f.2740558",
+    "type": "change",
+    "z": "95857a05.9d0028",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "wss_port",
+        "pt": "global",
+        "to": "3000",
+        "tot": "num"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 750,
+    "y": 220,
+    "wires": [
+      [
+        "4c579bdc.cd3744"
+      ]
+    ]
+  },
+  {
+    "id": "d80538b5.a38738",
+    "type": "debug",
+    "z": "95857a05.9d0028",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "x": 730,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "ef801e14.dec41",
+    "type": "comment",
+    "z": "95857a05.9d0028",
+    "name": "アクセスできるwssが無い",
+    "info": "",
+    "x": 770,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "4c579bdc.cd3744",
+    "type": "debug",
+    "z": "95857a05.9d0028",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "x": 950,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "c05989cb.c22098",
+    "type": "http request",
+    "z": "b863c8a6.457be8",
+    "name": "GP2 LED点滅",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://localhost:{{wss_port}}/write?target=GP2&value={{value}}",
+    "tls": "",
+    "x": 820,
+    "y": 280,
+    "wires": [
+      [
+        "32059de9.8ef402"
+      ]
+    ]
+  },
+  {
+    "id": "2146a199.a6271e",
+    "type": "http request",
+    "z": "b863c8a6.457be8",
+    "name": "get BME0 data",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://localhost:{{wss_port}}/sensor?ids=BME0",
+    "tls": "",
+    "x": 460,
+    "y": 160,
+    "wires": [
+      [
+        "79d2825.5a6047c"
+      ]
+    ]
+  },
+  {
+    "id": "3ab67ae0.65a196",
+    "type": "switch",
+    "z": "b863c8a6.457be8",
+    "name": "alert?",
+    "property": "is_alert",
+    "propertyType": "global",
+    "rules": [
+      {
+        "t": "true"
+      },
+      {
+        "t": "false"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 550,
+    "y": 240,
+    "wires": [
+      [
+        "15090814.b6c3f8"
+      ],
+      [
+        "43570a17.fa9e54"
+      ]
+    ],
+    "inputLabels": [
+      "input"
+    ],
+    "outputLabels": [
+      "output1",
+      "output2"
+    ]
+  },
+  {
+    "id": "e6fb9860.f6c1b8",
+    "type": "change",
+    "z": "95857a05.9d0028",
+    "name": "is_alert初期化",
+    "rules": [
+      {
+        "t": "set",
+        "p": "is_alert",
+        "pt": "global",
+        "to": "true",
+        "tot": "bool"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 160,
+    "y": 160,
+    "wires": [
+      [
+        "f12e9100.5e003"
+      ]
+    ]
+  },
+  {
+    "id": "43570a17.fa9e54",
+    "type": "http request",
+    "z": "b863c8a6.457be8",
+    "name": "GP2 LED点灯",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://localhost:{{wss_port}}/write?target=GP2&value=1",
+    "tls": "",
+    "x": 820,
+    "y": 320,
+    "wires": [
+      [
+        "32059de9.8ef402"
+      ]
+    ]
+  },
+  {
+    "id": "ee9f6845.cc8ab8",
+    "type": "change",
+    "z": "b863c8a6.457be8",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "wss_port",
+        "pt": "msg",
+        "to": "wss_port",
+        "tot": "global"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 390,
+    "y": 120,
+    "wires": [
+      [
+        "2146a199.a6271e"
+      ]
+    ]
+  },
+  {
+    "id": "97ec3e16.6b077",
+    "type": "delay",
+    "z": "b863c8a6.457be8",
+    "name": "sleep 0.5s",
+    "pauseType": "delay",
+    "timeout": "0.5",
+    "timeoutUnits": "seconds",
+    "rate": "1",
+    "nbRateUnits": "1",
+    "rateUnits": "second",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "drop": false,
+    "x": 390,
+    "y": 240,
+    "wires": [
+      [
+        "3ab67ae0.65a196"
+      ]
+    ]
+  },
+  {
+    "id": "275745c7.71c4fa",
+    "type": "inject",
+    "z": "4d2160e2.ec8b2",
+    "name": "SET BME280 listen",
+    "topic": "",
+    "payload": "{\"op\": \"listen\", \"v\":[\"BME280\"], \"interval\":2000}",
+    "payloadType": "json",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": "1",
+    "x": 130,
+    "y": 180,
+    "wires": [
+      [
+        "22111c00.d31624"
+      ]
+    ]
+  },
+  {
+    "id": "91533ebd.8fba3",
+    "type": "inject",
+    "z": "4d2160e2.ec8b2",
+    "name": "STOP",
+    "topic": "",
+    "payload": "{\"op\": \"stop\"}",
+    "payloadType": "json",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 130,
+    "y": 240,
+    "wires": [
+      [
+        "22111c00.d31624"
+      ]
+    ]
+  },
+  {
+    "id": "22111c00.d31624",
+    "type": "websocket out",
+    "z": "4d2160e2.ec8b2",
+    "name": "/ws",
+    "server": "",
+    "client": "625d3f1a.0b51c",
+    "x": 350,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "e3fe317d.d223b",
+    "type": "websocket in",
+    "z": "4d2160e2.ec8b2",
+    "name": "",
+    "server": "",
+    "client": "625d3f1a.0b51c",
+    "x": 200,
+    "y": 360,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "57bee642.840f68",
+    "type": "debug",
+    "z": "4d2160e2.ec8b2",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "x": 630,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "3b10361.80403ca",
+    "type": "json",
+    "z": "4d2160e2.ec8b2",
+    "name": "",
+    "property": "payload",
+    "action": "",
+    "pretty": false,
+    "x": 450,
+    "y": 360,
+    "wires": [
+      [
+        "57bee642.840f68"
+      ]
+    ]
+  },
+  {
+    "id": "477bcb06.0802d4",
+    "type": "inject",
+    "z": "4d2160e2.ec8b2",
+    "name": "set interval 2000ms",
+    "topic": "",
+    "payload": "2000",
+    "payloadType": "num",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 150,
+    "y": 300,
+    "wires": [
+      [
+        "69468631.423b88"
+      ]
+    ]
+  },
+  {
+    "id": "69468631.423b88",
+    "type": "http request",
+    "z": "4d2160e2.ec8b2",
+    "name": "/write?target=TICK0&interval={{payload}}",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://localhost:8000/write?target=TICK0&interval={{payload}}",
+    "tls": "",
+    "x": 430,
+    "y": 300,
+    "wires": [
+      [
+        "57bee642.840f68"
+      ]
+    ]
+  },
+  {
+    "id": "dfa23d4d.eedfc",
+    "type": "inject",
+    "z": "4d2160e2.ec8b2",
+    "name": "port 8000",
+    "topic": "",
+    "payload": "8000",
+    "payloadType": "num",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 160,
+    "y": 80,
+    "wires": [
+      [
+        "a2a52318.8ff9"
+      ]
+    ]
+  },
+  {
+    "id": "3c84f606.ad5d7a",
+    "type": "inject",
+    "z": "4d2160e2.ec8b2",
+    "name": "port 3000",
+    "topic": "",
+    "payload": "3000",
+    "payloadType": "num",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 160,
+    "y": 120,
+    "wires": [
+      [
+        "a2a52318.8ff9"
+      ]
+    ]
+  },
+  {
+    "id": "a2a52318.8ff9",
+    "type": "change",
+    "z": "4d2160e2.ec8b2",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "payload",
+        "pt": "msg",
+        "to": "wss_port",
+        "tot": "msg"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 360,
+    "y": 80,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "3721febb.3ba702",
+    "type": "inject",
+    "z": "4ade60cd.401f9",
+    "name": "SET BME280 listen",
+    "topic": "",
+    "payload": "{\"op\": \"listen\", \"v\":[\"BME280\"]}",
+    "payloadType": "json",
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "1",
+    "x": 150,
+    "y": 100,
+    "wires": [
+      [
+        "6706473c.62cd28"
+      ]
+    ]
+  },
+  {
+    "id": "3cbef379.73a85c",
+    "type": "inject",
+    "z": "4ade60cd.401f9",
+    "name": "STOP",
+    "topic": "",
+    "payload": "{\"op\": \"stop\"}",
+    "payloadType": "json",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 190,
+    "y": 140,
+    "wires": [
+      [
+        "6706473c.62cd28"
+      ]
+    ]
+  },
+  {
+    "id": "6706473c.62cd28",
+    "type": "websocket out",
+    "z": "4ade60cd.401f9",
+    "name": "[ws] /ws",
+    "server": "",
+    "client": "3f32a29b.7c7dae",
+    "x": 420,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "bca42925.dc71d8",
+    "type": "websocket in",
+    "z": "4ade60cd.401f9",
+    "name": "[ws] /ws",
+    "server": "",
+    "client": "3f32a29b.7c7dae",
+    "x": 100,
+    "y": 200,
+    "wires": [
+      [
+        "764e89b4.2a2968"
+      ]
+    ]
+  },
+  {
+    "id": "764e89b4.2a2968",
+    "type": "json",
+    "z": "4ade60cd.401f9",
+    "name": "",
+    "property": "payload",
+    "action": "",
+    "pretty": false,
+    "x": 230,
+    "y": 200,
+    "wires": [
+      [
+        "f25674aa.b70778"
+      ]
+    ]
+  },
+  {
+    "id": "8f92241c.f57148",
+    "type": "change",
+    "z": "4ade60cd.401f9",
+    "name": "led=0",
+    "rules": [
+      {
+        "t": "set",
+        "p": "led",
+        "pt": "flow",
+        "to": "0",
+        "tot": "num"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 470,
+    "y": 300,
+    "wires": [
+      [
+        "20fc38f6.69b048"
+      ]
+    ]
+  },
+  {
+    "id": "383d051b.8e990a",
+    "type": "change",
+    "z": "4ade60cd.401f9",
+    "name": "led=1",
+    "rules": [
+      {
+        "t": "set",
+        "p": "led",
+        "pt": "flow",
+        "to": "1",
+        "tot": "num"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 470,
+    "y": 260,
+    "wires": [
+      [
+        "20fc38f6.69b048"
+      ]
+    ]
+  },
+  {
+    "id": "20fc38f6.69b048",
+    "type": "switch",
+    "z": "4ade60cd.401f9",
+    "name": "led change?",
+    "property": "led",
+    "propertyType": "flow",
+    "rules": [
+      {
+        "t": "neq",
+        "v": "led_pass",
+        "vt": "flow"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 1,
+    "x": 630,
+    "y": 280,
+    "wires": [
+      [
+        "d42ed8a9.8fe3a8"
+      ]
+    ]
+  },
+  {
+    "id": "d42ed8a9.8fe3a8",
+    "type": "change",
+    "z": "4ade60cd.401f9",
+    "name": "set led value",
+    "rules": [
+      {
+        "t": "set",
+        "p": "led_pass",
+        "pt": "flow",
+        "to": "led",
+        "tot": "flow"
+      },
+      {
+        "t": "set",
+        "p": "led",
+        "pt": "msg",
+        "to": "led",
+        "tot": "flow"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 270,
+    "y": 360,
+    "wires": [
+      [
+        "4a26e879.808aa8"
+      ]
+    ]
+  },
+  {
+    "id": "e6b2fa2b.d42818",
+    "type": "http request",
+    "z": "4ade60cd.401f9",
+    "name": "GP2 LED",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://192.168.0.17:{{wss_port}}/write?target=GP2&value={{led}}",
+    "tls": "",
+    "x": 640,
+    "y": 360,
+    "wires": [
+      [
+        "7393ae25.ae2f8"
+      ]
+    ]
+  },
+  {
+    "id": "4a26e879.808aa8",
+    "type": "change",
+    "z": "4ade60cd.401f9",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "wss_port",
+        "pt": "msg",
+        "to": "wss_port",
+        "tot": "global"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 450,
+    "y": 360,
+    "wires": [
+      [
+        "e6b2fa2b.d42818"
+      ]
+    ]
+  },
+  {
+    "id": "7393ae25.ae2f8",
+    "type": "debug",
+    "z": "4ade60cd.401f9",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "x": 790,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "f25674aa.b70778",
+    "type": "switch",
+    "z": "4ade60cd.401f9",
+    "name": "has BME0?",
+    "property": "payload.BME0",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "nnull"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 1,
+    "x": 370,
+    "y": 200,
+    "wires": [
+      [
+        "59ac33a9.02470c"
+      ]
+    ]
+  },
+  {
+    "id": "c352c658.98c8d8",
+    "type": "link in",
+    "z": "20f73f5b.f0921",
+    "name": "湿度判定in",
+    "links": [
+      "79d2825.5a6047c",
+      "59ac33a9.02470c"
+    ],
+    "x": 75,
+    "y": 120,
+    "wires": [
+      [
+        "ab9d8e9f.64422"
+      ]
+    ]
+  },
+  {
+    "id": "8bdb29e8.a86698",
+    "type": "switch",
+    "z": "20f73f5b.f0921",
+    "name": "湿度 < 60 ?",
+    "property": "payload.BME0.humidity",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "gte",
+        "v": "60",
+        "vt": "num"
+      },
+      {
+        "t": "lt",
+        "v": "60",
+        "vt": "str"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 350,
+    "y": 100,
+    "wires": [
+      [
+        "7acc8916.86aba8"
+      ],
+      [
+        "e82b29c5.cad018"
+      ]
+    ]
+  },
+  {
+    "id": "b394078d.bb36d8",
+    "type": "switch",
+    "z": "20f73f5b.f0921",
+    "name": "湿度 >= 70 ?",
+    "property": "payload.BME0.humidity",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "gte",
+        "v": "70",
+        "vt": "num"
+      },
+      {
+        "t": "lt",
+        "v": "70",
+        "vt": "str"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 350,
+    "y": 160,
+    "wires": [
+      [
+        "7acc8916.86aba8"
+      ],
+      [
+        "e82b29c5.cad018"
+      ]
+    ]
+  },
+  {
+    "id": "7acc8916.86aba8",
+    "type": "change",
+    "z": "20f73f5b.f0921",
+    "name": "alert=true",
+    "rules": [
+      {
+        "t": "set",
+        "p": "is_alert",
+        "pt": "global",
+        "to": "true",
+        "tot": "bool"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 540,
+    "y": 100,
+    "wires": [
+      [
+        "1800fee1.afe0f1"
+      ]
+    ]
+  },
+  {
+    "id": "e82b29c5.cad018",
+    "type": "change",
+    "z": "20f73f5b.f0921",
+    "name": "alert=false",
+    "rules": [
+      {
+        "t": "set",
+        "p": "is_alert",
+        "pt": "global",
+        "to": "false",
+        "tot": "bool"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 550,
+    "y": 160,
+    "wires": [
+      [
+        "ccbf74ed.3c2528"
+      ]
+    ]
+  },
+  {
+    "id": "560f5ed3.e8c17",
+    "type": "comment",
+    "z": "20f73f5b.f0921",
+    "name": "警告時：湿度70％超えた場合、解除時：60％切ったとき",
+    "info": "",
+    "x": 270,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "ab9d8e9f.64422",
+    "type": "switch",
+    "z": "20f73f5b.f0921",
+    "name": "alert?",
+    "property": "is_alert",
+    "propertyType": "global",
+    "rules": [
+      {
+        "t": "true"
+      },
+      {
+        "t": "false"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 190,
+    "y": 120,
+    "wires": [
+      [
+        "8bdb29e8.a86698"
+      ],
+      [
+        "b394078d.bb36d8"
+      ]
+    ],
+    "inputLabels": [
+      "input"
+    ],
+    "outputLabels": [
+      "output1",
+      "output2"
+    ]
+  },
+  {
+    "id": "1800fee1.afe0f1",
+    "type": "link out",
+    "z": "20f73f5b.f0921",
+    "name": "湿度判定out（true）",
+    "links": [
+      "3443ae43.798472",
+      "909a4ee6.8d02e",
+      "e7873981.2a2aa8"
+    ],
+    "x": 695,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "79d2825.5a6047c",
+    "type": "link out",
+    "z": "b863c8a6.457be8",
+    "name": "湿度判定呼び出し",
+    "links": [
+      "c352c658.98c8d8"
+    ],
+    "x": 95,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "3443ae43.798472",
+    "type": "link in",
+    "z": "b863c8a6.457be8",
+    "name": "湿度判定後",
+    "links": [
+      "1800fee1.afe0f1",
+      "ccbf74ed.3c2528"
+    ],
+    "x": 275,
+    "y": 240,
+    "wires": [
+      [
+        "97ec3e16.6b077"
+      ]
+    ]
+  },
+  {
+    "id": "b207fcf0.aa0ec",
+    "type": "comment",
+    "z": "b863c8a6.457be8",
+    "name": "同時httpアクセス回避",
+    "info": "httpで同時に値を読みに行くとread I/O errorが発生することがあるので、ずらす",
+    "x": 400,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "ccbf74ed.3c2528",
+    "type": "link out",
+    "z": "20f73f5b.f0921",
+    "name": "湿度判定out（false）",
+    "links": [
+      "3443ae43.798472",
+      "909a4ee6.8d02e",
+      "3c41d9d0.8261a6"
+    ],
+    "x": 695,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "4b2a87e9.3b2f78",
+    "type": "change",
+    "z": "b863c8a6.457be8",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "timestamp",
+        "pt": "msg",
+        "to": "payload",
+        "tot": "msg"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 330,
+    "y": 80,
+    "wires": [
+      [
+        "ee9f6845.cc8ab8"
+      ]
+    ]
+  },
+  {
+    "id": "59ac33a9.02470c",
+    "type": "link out",
+    "z": "4ade60cd.401f9",
+    "name": "ws: 湿度判定呼び出し",
+    "links": [
+      "c352c658.98c8d8"
+    ],
+    "x": 155,
+    "y": 280,
+    "wires": []
+  },
+  {
+    "id": "3c41d9d0.8261a6",
+    "type": "link in",
+    "z": "4ade60cd.401f9",
+    "name": "ws 湿度判定後(false)",
+    "links": [
+      "ccbf74ed.3c2528"
+    ],
+    "x": 375,
+    "y": 300,
+    "wires": [
+      [
+        "8f92241c.f57148"
+      ]
+    ]
+  },
+  {
+    "id": "e7873981.2a2aa8",
+    "type": "link in",
+    "z": "4ade60cd.401f9",
+    "name": "ws 湿度判定後(true)",
+    "links": [
+      "1800fee1.afe0f1"
+    ],
+    "x": 375,
+    "y": 260,
+    "wires": [
+      [
+        "383d051b.8e990a"
+      ]
+    ]
+  },
+  {
+    "id": "49d416af.b04448",
+    "type": "comment",
+    "z": "b863c8a6.457be8",
+    "name": "湿度判定",
+    "info": "",
+    "x": 180,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "11f31835.121e48",
+    "type": "comment",
+    "z": "4ade60cd.401f9",
+    "name": "湿度判定",
+    "info": "",
+    "x": 260,
+    "y": 280,
+    "wires": []
+  },
+  {
+    "id": "1523066d.ad293a",
+    "type": "comment",
+    "z": "b863c8a6.457be8",
+    "name": "毎秒実行、湿度を読み取り結果をLEDに反映",
+    "info": "",
+    "x": 190,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "6869f3e6.20f51c",
+    "type": "comment",
+    "z": "4ade60cd.401f9",
+    "name": "受信した湿度から判定し結果をLEDに反映",
+    "info": "",
+    "x": 200,
+    "y": 40,
+    "wires": []
+  }
+]
