@@ -25,11 +25,11 @@ git clone https://github.com/uhuru-yokota-eiji/kikoripi
 cd kikoripi/
 
 # RaspberryPi 上の場合
-pip install/staging.txt
+pip install -r requirements/staging.txt
 cp .env.staging .env
 
 # 開発環境の場合
-# pip install/develop.txt
+# pip install -r requirements/develop.txt
 # cp .env.develop .env
 
 python mannage.py runserver localhost:3000
@@ -39,7 +39,7 @@ python mannage.py runserver localhost:3000
 
 HTTP/GET
 ```
-% curl http://localhost:3000/scan
+% curl "http://localhost:3000/scan"
 {"result": "success", "msg": "Success", "v": [{"name": "scaned_sensor_name", "id": "scaned_sensor_id"}]}
 ```
 WebSocket
