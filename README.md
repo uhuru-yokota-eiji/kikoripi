@@ -32,7 +32,7 @@ cp .env.staging .env
 # pip install -r requirements/develop.txt
 # cp .env.develop .env
 
-python mannage.py runserver localhost:3000
+python manage.py runserver localhost:3000
 ```
 
 ## 動作確認
