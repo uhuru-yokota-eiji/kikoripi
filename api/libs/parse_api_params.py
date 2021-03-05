@@ -141,6 +141,9 @@ class ParseApiParams:
     def has_gp(self):
         return settings.SENSOR_NAME_GP in self._result
 
+    def has_adc(self):
+        return settings.SENSOR_NAME_ADC in self._result
+
     def gp(self, ind):
         return self._result[settings.SENSOR_NAME_GP][ind]
 

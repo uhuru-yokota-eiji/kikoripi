@@ -19,26 +19,36 @@ def write(request):
     """
 
     params = request.GET.copy()
-    parse = ParseApiParams(params, mode="write")
     api_response = ApiResponse()
-
-    # NOTICE: 初期化をすべてのpinに毎回実施するのが良いかは要調査
-    _init_gpio_output()
+    parse = ParseApiParams(params, mode="write")
 
     if parse.has_gp():
-        # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
-        value = int(parse.gp(0)["value"])
-        GrovepiHandler.digitalWrite(parse.gp(0)["no"], value)
-        api_response.set_params({"value": value})
+        try:
+            # NOTICE: 初期化をすべてのpinに毎回実施するのが良いかは要調査　->　書き込み毎にやらないほうがいい。ポートの状態が一瞬でも変化することがありうる
+            _init_gpio_output()
+            # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
+            value = int(parse.gp(0)["value"])
+            GrovepiHandler.digitalWrite(parse.gp(0)["no"], value)
+        except IndexError:
+            api_response.failure("index Error")
+        except Exception as e:
+            api_response.failure(str(e))
+        else:
+            api_response.success()
+            api_response.set_params({"value": value})
 
     # NOTICE: /writeでtickが"target"キーにある場合、"interval"もある前提
     if parse.has_tick():
-        # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
-        Tick.update_interval(parse.tick(0)["interval"])
-        api_response.set_params({"interval": int(parse.tick(0)["interval"])})
-
-    # TODO: 失敗時の処理
-    api_response.success()
+        try:
+            # NOTICE: 配列の最初固定。複数対応は必要なときに実施する
+            Tick.update_interval(parse.tick(0)["interval"])
+        except IndexError:
+            api_response.failure("index Error")
+        except Exception as e:
+            api_response.failure(str(e))
+        else:
+            api_response.success()
+            api_response.set_params({"interval": int(parse.tick(0)["interval"])})
 
     return JsonResponse(api_response.response)
 
@@ -54,20 +64,25 @@ def read(request):
         dict: クライアントに返すjson形式の値
     """
     params = request.GET.copy()
+    api_response = ApiResponse()
+
     parse = ParseApiParams(params, mode="read")
-    api_response = ApiResponse(params)
 
-    adc_no = parse.adc(0)["no"]
-
-    try:
-        GrovepiHandler.pinMode(adc_no, "INPUT")
-        sensor_value = GrovepiHandler.analogRead(adc_no)
-    except IOError:
-        # TODO: except句とエラーの種類を増やし、エラーメッセージをエラー内容にあわせる
-        api_response.failure("No sensor found")
-    else:
-        api_response.success()
-        api_response.set_params({"value": sensor_value})
+    if parse.has_adc():
+        try:
+            adc_no = parse.adc(0)["no"]
+            GrovepiHandler.pinMode(adc_no, "INPUT")
+            sensor_value = GrovepiHandler.analogRead(adc_no)
+        except IOError:
+            # TODO: except句とエラーの種類を増やし、エラーメッセージをエラー内容にあわせる
+            api_response.failure("No sensor found")
+        except IndexError:
+            api_response.failure("index Error")
+        except Exception as e:
+            api_response.failure(str(e))
+        else:
+            api_response.success()
+            api_response.set_params({"value": sensor_value})
 
     return JsonResponse(api_response.response)
 
