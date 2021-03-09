@@ -32,6 +32,8 @@ cp .env.staging .env
 # pip install -r requirements/develop.txt
 # cp .env.develop .env
 
+python manage.py migrate
+
 python manage.py runserver localhost:3000
 ```
 
