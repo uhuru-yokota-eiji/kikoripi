@@ -18,24 +18,15 @@ raspi上で動く、WSS(Web Sensor Server)とgrovePi+のセンサー（GPIO, ADC
   * I2C Sensor. Ex: [BME280](http://wiki.seeedstudio.com/Grove-Barometer_Sensor-BME280/)
 
 
-## Install & Run
+## 開発環境（Windows）インストールと実行手順
 
-```
-git clone https://github.com/uhuru-yokota-eiji/kikoripi
-cd kikoripi/
+* [環境インストール手順](docs/windowsInstall.md)
+* [kikoripiのインストールと実行手順](docs/windowsKikoripiInstall.md)
 
-# RaspberryPi 上の場合
-pip install -r requirements/staging.txt
-cp .env.staging .env
-
-# 開発環境の場合
-# pip install -r requirements/develop.txt
-# cp .env.develop .env
-
-python manage.py migrate
-
-python manage.py runserver localhost:3000
-```
+## RaspberryPi環境用インストールと実行手順
+* [環境インストール手順](docs/raspberrypiInstall.md)
+* [kikoripiのインストールと実行手順](docs/raspberrypikikoripiInstall.md)
+* [起動時にkikoripiを立ち上げる方法](docs/raspberrypiKikoripiLinuxService.md)
 
 ## 動作確認
 
@@ -58,6 +49,8 @@ Interfaceは [kikori](https://gitlab.com/myst3m/kikori/) を参考に作成し�
 
 * [HTTP/GET](https://gitlab.com/myst3m/kikori#httpget)
 * [WebSocket](https://gitlab.com/myst3m/kikori#websocket)
+
+* [対応コマンド内容について](docs/commandAPI.md)
 
 ### 仮想デバイス(TICK)
 
