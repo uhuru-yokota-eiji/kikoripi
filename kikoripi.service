@@ -1,0 +1,15 @@
+[Unit]
+Description=kikoripi device service
+After=multi-user.target
+
+[Service]
+ExecStart=/home/pi/.pyenv/shims/python3 manage.py runserver localhost:3000
+WorkingDirectory=/home/pi/kikoripi
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kikoripi device service
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
