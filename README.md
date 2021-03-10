@@ -21,11 +21,11 @@ raspi上で動く、WSS(Web Sensor Server)とgrovePi+のセンサー（GPIO, ADC
 ## 開発環境（Windows）インストール手順
 
 * [環境インストール手順](docs/windowsInstall.md)
-* [kikoripiのインストール手順](docs/windowsKikoripiInstall.md)
+* [kikoripiのインストールと実行手順](docs/windowsKikoripiInstall.md)
 
 ## RaspberryPi環境用インストール手順
 * [環境インストール手順](docs/raspberrypiInstall.md)
-* [kikoripiのインストール手順](docs/raspberrypikikoripiInstall.md)
+* [kikoripiのインストールと実行手順](docs/raspberrypikikoripiInstall.md)
 * [起動時にkikoripiを立ち上げる方法](docs/raspberrypiKikoripiLinuxService.md)
 
 ## 動作確認
