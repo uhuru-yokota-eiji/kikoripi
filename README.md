@@ -18,12 +18,12 @@ raspi上で動く、WSS(Web Sensor Server)とgrovePi+のセンサー（GPIO, ADC
   * I2C Sensor. Ex: [BME280](http://wiki.seeedstudio.com/Grove-Barometer_Sensor-BME280/)
 
 
-## 開発環境（Windows）インストール手順
+## 開発環境（Windows）インストールと実行手順
 
 * [環境インストール手順](docs/windowsInstall.md)
 * [kikoripiのインストールと実行手順](docs/windowsKikoripiInstall.md)
 
-## RaspberryPi環境用インストール手順
+## RaspberryPi環境用インストールと実行手順
 * [環境インストール手順](docs/raspberrypiInstall.md)
 * [kikoripiのインストールと実行手順](docs/raspberrypikikoripiInstall.md)
 * [起動時にkikoripiを立ち上げる方法](docs/raspberrypiKikoripiLinuxService.md)
