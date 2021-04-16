@@ -16,7 +16,7 @@ constantly==15.1.0
 cryptography==2.8
 daphne==2.4.1
 Django==3.0.7
-django-debug-toolbar==2.2
+django-debug-toolbar==2.2.1
 entrypoints==0.3
 flake8==3.7.9
 flake8-walrus==1.1.0
